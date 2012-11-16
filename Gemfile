@@ -4,8 +4,17 @@ gem "rake"
 
 gem "sinatra"
 gem "json"
-gem "pry"
-gem "picky"
 
-gem "romkan"
-gem "ruby-progressbar"
+group :development do
+  gem "pry"
+end
+
+group :picky do
+  gem "picky"
+  gem "romkan"
+end
+
+group :db do
+  gem "dm-sqlite-adapter"
+  gem "data_mapper"
+end
