@@ -1,13 +1,18 @@
 require "bundler"
 
-Bundler.require
+Bundler.require(:default, :db, :picky, :development)
+ROOT_DIR=File.expand_path(File.dirname(__FILE__))
 
-ROOT_DIR=File.dirname(__FILE__)
+require_relative 'grammar/wadoku_grammar'
+require_relative 'grammar/text_transform'
+require_relative 'grammar/html_transform'
 
-require_relative "db/config.rb"
+require_relative "db/config"
 
-require_relative "picky/misc.rb"
-require_relative "picky/indexes.rb"
+require_relative 'app/models/entry'
+
+require_relative "picky/misc"
+require_relative "picky/indexes"
 Picky::Indexes.load
 
-require_relative "app/index.rb"
+require_relative "app/index"

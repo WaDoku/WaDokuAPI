@@ -5,6 +5,8 @@ gem "rake"
 gem "sinatra"
 gem "json"
 
+gem 'parslet'
+
 group :development do
   gem "pry"
 end
@@ -15,6 +17,6 @@ group :picky do
 end
 
 group :db do
-  gem "dm-sqlite-adapter"
   gem "data_mapper"
+  gem "dm-sqlite-adapter"
 end
