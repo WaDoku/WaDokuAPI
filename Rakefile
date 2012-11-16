@@ -2,11 +2,12 @@ require "bundler"
 
 Bundler.require
 
-require_relative "picky/misc.rb"
-require_relative "picky/indexes.rb"
-
-desc "Build the index from a source file in source_data/WaDokuNormal.tab"
+desc "Build the index from a source file."
 task :index do |t|
-  puts "Indexing source file..."
-  binding.pry
+
+  require_relative "picky/misc.rb"
+  require_relative "picky/indexes.rb"
+
+  puts "Indexing source file..." 
+  @romaji_index.index
 end
