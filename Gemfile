@@ -3,7 +3,7 @@ source :rubygems
 gem "rake"
 
 gem "sinatra"
-gem "json"
+gem "yajl-ruby"
 
 gem 'parslet'
 
