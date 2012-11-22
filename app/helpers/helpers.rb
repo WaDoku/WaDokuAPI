@@ -9,12 +9,12 @@ class WadokuSearchAPI < Sinatra::Base
       WadokuSearch.search(params[:query], 30, params[:offset])
     end
 
-    def make_results search, format = "json"
+    def make_results search, format = "plain"
       ids = search.ids
       @entries = Entry.all(wadoku_id: ids)
 
       case format
-      when "json"
+      when "plain"
         results = @entries.map do |e|
           parsed = @@grammar.parse e.definition
           definition = @@text_transformer.apply parsed
