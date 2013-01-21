@@ -3,7 +3,7 @@ source :rubygems
 gem "rake"
 
 gem "sinatra"
-gem "yajl-ruby"
+gem "yajl-ruby", :require => 'yajl'
 
 gem 'parslet'
 

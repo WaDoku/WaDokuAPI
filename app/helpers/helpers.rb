@@ -15,32 +15,33 @@ class WadokuSearchAPI < Sinatra::Base
 
       case format
       when "plain"
-        results = @entries.map do |e|
-          parsed = @@grammar.parse e.definition
-          definition = @@text_transformer.apply parsed
-          {
-            midashigo: e.midashigo,
-            definition: definition
-          }
-        end
+        transformer = @@text_transformer
       when "html"
-        results = @entries.map do |e|
+        transformer = @@html_transformer
+      else
+        return Yajl::Encoder.encode({error: "Wrong format"})
+      end
+
+      results = @entries.map do |e|
+        begin
           parsed = @@grammar.parse e.definition
-          definition = @@html_transformer.apply parsed
+          definition = transformer.apply parsed
           {
+            writing: e.writing,
             midashigo: e.midashigo,
+            kana: e.kana,
             definition: definition
           }
+        rescue => e
+          nil
         end
-      else 
-        return Yajl::Encoder.encode({error: "Wrong format"})
       end
 
       res = {
         total: search.total,
         query: search.query,
         offset: search.offset,
-        entries: results
+        entries: results.compact
       }
 
       Yajl::Encoder.encode(res)
