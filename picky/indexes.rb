@@ -1,6 +1,6 @@
 #encoding:utf-8
 #
-SOURCE_FILE = ENV["WADOKU_SOURCE"] || "WaDokuJT-Data/WaDokuNormal.tab"
+SOURCE_FILE = ENV["WADOKU_SOURCE"] || "WaDokuJT-Data/WaDokuDa.tab"
 reader = WadokuTabReader.new(SOURCE_FILE)
 
 @japanese_index = Picky::Index.new :japanese do

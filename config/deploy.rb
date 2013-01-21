@@ -12,7 +12,7 @@ set :scm, :git
 set :application, "WadokuAPI"
 set :repository,  "git://github.com/Wadoku/WaDokuAPI.git"
 
-server_ip = "192.168.2.105"
+server_ip = "wadoku.eu"
 
 role :web, server_ip                          # Your HTTP server, Apache/etc
 role :app, server_ip                          # This may be the same as your `Web` server
@@ -28,3 +28,4 @@ default_run_options[:pty] = true
 set :deploy_via, :remote_cache
 set :user, "deploy"
 set :use_sudo, false
+set :git_enable_submodules, 1
