@@ -30,6 +30,12 @@ set :user, "deploy"
 set :use_sudo, false
 set :git_enable_submodules, 1
 
+namespace :index do
+  task :reindex do
+    run "cd #{current_path} && bundle exec ruby index.rb"
+  end
+end
+
 namespace :db_setup do
   task :create_shared, :roles => :app do
     run "mkdir -p #{deploy_to}/#{shared_dir}/db/"

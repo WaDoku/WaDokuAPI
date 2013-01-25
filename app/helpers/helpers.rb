@@ -1,3 +1,26 @@
+module HashSubtree
+  def subtree(sym)
+    res = []
+    self.keys.each do |key|
+      if key == sym
+        res << {key => self[key]}
+      else
+        if self[key].class == Hash
+          self[key].extend(HashSubtree) unless self[key].respond_to?(:subtree)
+          res << self[key].subtree(sym)
+        elsif self[key].class == Array
+          res << self[key].map{|x| x.subtree(sym)}
+        end
+      end
+    end
+    res.flatten.compact
+  end
+end
+
+class Hash
+  include HashSubtree
+end
+
 class WadokuSearchAPI < Sinatra::Base
   helpers do
     @@grammar = WadokuGrammar.new
@@ -7,6 +30,16 @@ class WadokuSearchAPI < Sinatra::Base
     def search params
       params[:offset] ||= 0
       WadokuSearch.search(params[:query], 30, params[:offset])
+    end
+
+    # Adds a picture to the hash if one is present
+    def add_picture hash, tree
+      pict = tree.subtree(:pict).first
+      if pict then
+        hash[:caption] = pict[:pict][:capt]
+        hash[:picture] = "/svg/#{pict[:pict][:filen]}.svg"
+      end
+      hash
     end
 
     def make_results search, format, callback
@@ -26,12 +59,14 @@ class WadokuSearchAPI < Sinatra::Base
         begin
           parsed = @@grammar.parse e.definition
           definition = transformer.apply parsed
-          {
+          res = {
             writing: e.writing,
             midashigo: (e.midashigo.strip == "" ? e.writing : e.midashigo),
             kana: e.kana,
             definition: definition
           }
+          add_picture res, parsed
+          res
         rescue => error
           puts "Could not parse #{e.definition}"
           puts error
