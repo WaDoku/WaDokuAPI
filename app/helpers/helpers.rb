@@ -42,6 +42,35 @@ class WadokuSearchAPI < Sinatra::Base
       hash
     end
 
+    def get_entry daid, format, callback
+      e = Entry.first(wadoku_id: daid)
+      res = ""
+      begin
+        parsed = @@grammar.parse e.definition
+        definition = @@html_transformer.apply parsed
+        res = {
+          writing: e.writing,
+          midashigo: (e.midashigo.strip == "" ? e.writing : e.midashigo),
+          kana: e.kana,
+          furigana: e.kana[/^[^\[\s]+/],
+          definition: definition
+        }
+        add_picture res, parsed
+        res
+      rescue => error
+        puts "Could not parse #{e.definition}"
+        puts error
+        nil
+      end
+      json = Yajl::Encoder.encode(res)
+
+      # This is a jsonp request
+      json = callback + "(" + json + ")" if callback
+
+      json
+
+    end
+
     def make_results search, format, callback
       ids = search.ids
       @entries = Entry.all(wadoku_id: ids)
@@ -63,6 +92,7 @@ class WadokuSearchAPI < Sinatra::Base
             writing: e.writing,
             midashigo: (e.midashigo.strip == "" ? e.writing : e.midashigo),
             kana: e.kana,
+            furigana: e.kana[/^[^\[\s]+/],
             definition: definition
           }
           add_picture res, parsed

@@ -7,4 +7,8 @@ class WadokuSearchAPI < Sinatra::Base
     @res = search(params)
     make_results @res, params[:format] || "plain", params[:callback]
   end
+
+  get "/api/v1/entry/:daid" do
+    get_entry params[:daid], "html", params[:callback]
+  end
 end
