@@ -9,7 +9,7 @@ class WadokuSearchAPI < Sinatra::Base
       WadokuSearch.search(params[:query], 30, params[:offset])
     end
 
-    def make_results search, format = "plain"
+    def make_results search, format, callback
       ids = search.ids
       @entries = Entry.all(wadoku_id: ids)
 
@@ -28,11 +28,13 @@ class WadokuSearchAPI < Sinatra::Base
           definition = transformer.apply parsed
           {
             writing: e.writing,
-            midashigo: e.midashigo,
+            midashigo: (e.midashigo.strip == "" ? e.writing : e.midashigo),
             kana: e.kana,
             definition: definition
           }
-        rescue => e
+        rescue => error
+          puts "Could not parse #{e.definition}"
+          puts error
           nil
         end
       end
@@ -44,7 +46,12 @@ class WadokuSearchAPI < Sinatra::Base
         entries: results.compact
       }
 
-      Yajl::Encoder.encode(res)
+      json = Yajl::Encoder.encode(res)
+
+      # This is a jsonp request
+      json = callback + "(" + json + ")" if callback
+
+      json
     end
   end
 end
