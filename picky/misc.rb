@@ -27,7 +27,7 @@ class WadokuTabReader
     end
   
     def kana
-      @arr[3]
+      @arr[2]
     end
 
     def romaji
@@ -35,7 +35,7 @@ class WadokuTabReader
     end
 
     def definition
-      @arr[4]
+      @arr[3]
     end
   end
 end
