@@ -6,7 +6,7 @@ class JsonEntry
     @entry = entry
   end
 
-  def to_hash options
+  def to_hash options = {}
     format = options[:format] || "html"
 
     case format
@@ -33,7 +33,7 @@ class JsonEntry
     end
   end
 
-  def to_json options
+  def to_json options = {}
     format = options[:format] || "html"
     callback = options[:callback] || nil
 
