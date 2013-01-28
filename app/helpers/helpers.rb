@@ -44,6 +44,7 @@ class WadokuSearchAPI < Sinatra::Base
 
     def get_entry daid, format, callback
       e = Entry.first(wadoku_id: daid)
+      return Yajl::Encoder.encode({error: "No entry with this wadoku id."}) unless e
       res = ""
       begin
         parsed = @@grammar.parse e.definition
@@ -58,8 +59,6 @@ class WadokuSearchAPI < Sinatra::Base
         add_picture res, parsed
         res
       rescue => error
-        puts "Could not parse #{e.definition}"
-        puts error
         nil
       end
       json = Yajl::Encoder.encode(res)
@@ -73,7 +72,7 @@ class WadokuSearchAPI < Sinatra::Base
 
     def make_results search, format, callback
       ids = search.ids
-      @entries = Entry.all(wadoku_id: ids)
+      @entries = Entry.all(id: ids)
 
       case format
       when "plain"
@@ -98,8 +97,6 @@ class WadokuSearchAPI < Sinatra::Base
           add_picture res, parsed
           res
         rescue => error
-          puts "Could not parse #{e.definition}"
-          puts error
           nil
         end
       end
