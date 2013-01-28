@@ -18,6 +18,11 @@ describe WadokuSearchAPI do
         get '/api/v1/search?query=japan'
         last_json["total"].should be 77
       end
+
+      it 'should not contain errored entries' do
+        get '/api/v1/search?query=japan'
+        last_json["entries"].each {|entry| entry["error"].should be_nil}
+      end
     end
 
     describe "entries" do

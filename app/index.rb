@@ -5,10 +5,11 @@ class WadokuSearchAPI < Sinatra::Base
 
   get "/api/v1/search" do
     @res = search(params)
-    make_results @res, params[:format] || "plain", params[:callback]
+    make_results @res, params[:format] || "html", params[:callback]
   end
 
   get "/api/v1/entry/:daid" do
-    get_entry params[:daid], "html", params[:callback]
+    @entry = Entry.first(wadoku_id: params[:daid])
+    JsonEntry.new(@entry).to_json(params)
   end
 end
