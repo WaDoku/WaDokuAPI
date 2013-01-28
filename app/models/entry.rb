@@ -12,4 +12,8 @@ class Entry
   property :relation_kind, String
   property :romaji_help, String
   property :midashigo, String
+
+  def romaji
+    kana.to_roma
+  end
 end

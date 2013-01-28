@@ -13,10 +13,15 @@ end
 
 group :picky do
   gem "picky"
-  gem "romkan"
 end
 
 group :db do
+  gem "romkan"
   gem "data_mapper"
   gem "dm-sqlite-adapter"
+end
+
+group :test do 
+  gem 'rspec'
+  gem "rack-test", require: "rack/test"
 end

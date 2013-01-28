@@ -1,10 +1,8 @@
 #encoding:utf-8
 #
-SOURCE_FILE = ENV["WADOKU_SOURCE"] || "WaDokuJT-Data/WaDokuDa.tab"
-reader = WadokuTabReader.new(SOURCE_FILE)
 
 @japanese_index = Picky::Index.new :japanese do
-  source reader
+  source Entry
   indexing :removes_characters => /[^\p{Han}\p{Katakana}\p{Hiragana}\s;\(\)\[\]]/,
            :stopwords =>         /\b(and|the|of|it|in|for)\b/i,
            :splits_text_on =>    /[\s;\(\)\[\]]/
@@ -14,7 +12,7 @@ reader = WadokuTabReader.new(SOURCE_FILE)
 end
 
 @romaji_index = Picky::Index.new :latin do
-  source reader
+  source Entry
   indexing :removes_characters => /[^a-zA-Z0-9\s;\(\)\[\]<>]/,
            :stopwords =>         /\b(und|der|ein|die|das|eine)\b/i,
            :splits_text_on =>    /[\s;\(\)\[\]<>]/
