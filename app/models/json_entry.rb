@@ -27,6 +27,7 @@ class JsonEntry
         definition: definition
       }
       add_picture res, parsed
+      add_audio res, parsed
       return res
     rescue => reason
       return error(reason)
@@ -52,7 +53,7 @@ class JsonEntry
     {error: reason}
   end
 
-  # Adds a picture to the hash if one is present
+  # Adds a picture to the hash iff one is present
   def add_picture hash, tree
     pict = tree.subtree(:pict).first
     if pict then
@@ -60,5 +61,13 @@ class JsonEntry
       hash[:picture] = "/svg/#{pict[:pict][:filen]}.svg"
     end
     hash
+  end
+
+  # Adds an audio link to the hash iff one is present
+  def add_audio hash, tree
+    audio = tree.subtree(:audio).first
+    if audio then
+        hash[:audio] = "/audio/#{audio[:audio][:text]}.mp3"
+    end
   end
 end
