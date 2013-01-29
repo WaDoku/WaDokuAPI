@@ -18,5 +18,5 @@ require_relative "picky/misc"
 require_relative "picky/indexes"
 Picky::Indexes.load
 
-require_relative "app/index"
+require_relative "app/api"
 require_relative "app/helpers/helpers"
