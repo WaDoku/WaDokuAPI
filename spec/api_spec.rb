@@ -18,6 +18,13 @@ describe WadokuSearchAPI do
       hash = JsonEntry.new(Entry.get(1871)).to_hash
       hash[:picture].should be_nil
     end
+
+    it 'should have an audio property iff one is present in the entry' do
+      hash = JsonEntry.new(Entry.get(5)).to_hash
+      hash[:audio].should_not be_nil
+      hash = JsonEntry.new(Entry.get(4)).to_hash
+      hash[:audio].should be_nil
+    end
   end
 
   describe "API v1" do
@@ -43,6 +50,24 @@ describe WadokuSearchAPI do
       it 'should return an error for an invalid wadoku id' do
         get '/api/v1/entry/invalid'
         last_json["error"].should_not be_nil
+      end
+
+      it 'should return different definition fields depending on the format' do
+
+        # HTML is the standard
+        get '/api/v1/entry/6843503'
+        last_json["definition"].should include('span class=')
+
+        get '/api/v1/entry/6843503?format=plain'
+        last_json["definition"].should_not include('span class=')
+
+        get '/api/v1/entry/6843503?format=html'
+        last_json["definition"].should include('span class=')
+      end
+
+      it 'should wrap the entries with a callback when given the parameter' do
+        get '/api/v1/entry/6843503?callback=rspec'
+        last_response.body.to_s.should start_with('rspec(')
       end
     end
   end
