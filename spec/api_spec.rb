@@ -39,6 +39,24 @@ describe WadokuSearchAPI do
         get '/api/v1/search?query=japan'
         last_json["entries"].each {|entry| entry["error"].should be_nil}
       end
+
+      it 'should return different definition fields depending on the format' do
+        # HTML is the default
+        get '/api/v1/search?query=japan'
+        last_json["entries"].first["definition"].should include('span class=')
+
+        get '/api/v1/search?query=japan&format=plain'
+        last_json["entries"].first["definition"].should_not include('span class=')
+
+        get '/api/v1/search?query=japan&format=html'
+        last_json["entries"].first["definition"].should include('span class=')
+      end
+
+      it 'should wrap the entries with a callback when given the parameter' do
+        get '/api/v1/search?query=japan&callback=rspec'
+        last_response.body.to_s.should start_with('rspec(')
+      end
+
     end
 
     describe "entries" do
@@ -53,8 +71,7 @@ describe WadokuSearchAPI do
       end
 
       it 'should return different definition fields depending on the format' do
-
-        # HTML is the standard
+        # HTML is the default
         get '/api/v1/entry/6843503'
         last_json["definition"].should include('span class=')
 
