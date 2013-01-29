@@ -3,6 +3,8 @@ require 'rspec/core/rake_task'
 
 ROOT_DIR=File.expand_path(File.dirname(__FILE__))
 
+task :default => "spec"
+
 desc "Run specs"
 task :spec do
   RSpec::Core::RakeTask.new(:spec) do |t|
