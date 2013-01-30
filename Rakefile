@@ -1,6 +1,5 @@
 require "bundler"
 require 'rspec/core/rake_task'
-require "pry"
 
 ROOT_DIR=File.expand_path(File.dirname(__FILE__))
 
@@ -8,6 +7,12 @@ task :default => "fresh_spec"
 
 desc "Run specs"
 task :spec do
+
+  require 'parslet'
+  require_relative 'grammar/wadoku_grammar'
+  require_relative 'grammar/html_transform'
+  require_relative 'grammar/text_transform'
+
   RSpec::Core::RakeTask.new(:spec) do |t|
     t.pattern = './spec/**/*_spec.rb'
   end
