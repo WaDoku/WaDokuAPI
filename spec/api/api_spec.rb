@@ -13,16 +13,16 @@ describe WadokuSearchAPI do
 
   describe JsonEntry do
     it 'should have a picture property iff one is present in the entry' do
-      hash = JsonEntry.new(Entry.get(617)).to_hash
+      hash = JsonEntry.new(Entry.get(616)).to_hash
       hash[:picture].should_not be_nil
-      hash = JsonEntry.new(Entry.get(1871)).to_hash
+      hash = JsonEntry.new(Entry.get(1870)).to_hash
       hash[:picture].should be_nil
     end
 
     it 'should have an audio property iff one is present in the entry' do
-      hash = JsonEntry.new(Entry.get(5)).to_hash
-      hash[:audio].should_not be_nil
       hash = JsonEntry.new(Entry.get(4)).to_hash
+      hash[:audio].should_not be_nil
+      hash = JsonEntry.new(Entry.get(3)).to_hash
       hash[:audio].should be_nil
     end
   end
