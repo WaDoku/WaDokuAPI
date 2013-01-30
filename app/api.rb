@@ -12,4 +12,13 @@ class WadokuSearchAPI < Sinatra::Base
     @entry = Entry.first(wadoku_id: params[:daid])
     JsonEntry.new(@entry).to_json(params)
   end
+
+  get "/api/v1/picky" do
+    params[:offset] ||= 0
+    params[:ids] ||= 30
+    results = WadokuSearch.search(params[:query], params[:ids], params[:offset])
+    res = results.to_json
+    res = "#{params[:callback]}(#{res});" if params[:callback]
+    res
+  end
 end
