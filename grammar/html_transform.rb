@@ -21,6 +21,8 @@ class HTMLTransform < Parslet::Transform
     contents.empty? ? nil :  "(#{contents.join("; ")})" 
   end
   rule(:title_type => simple(:title_type)) {nil}
+  rule(:kimulem => simple(:kimulem)) {nil}
+  rule(:dij => simple(:dij)) {nil}
   rule(:scientif => sequence(:contents)) {"<span class='scientif'>#{contents.compact.join}</span>"}
   rule(:date => simple(:date)) {"<span class='date'>#{date}</span>"}
   rule(:usage => simple(:usage)) {"<span class='usage'>#{usage}</span>"}
@@ -93,7 +95,7 @@ class HTMLTransform < Parslet::Transform
     res
   end
 
-  
+
   # drop it.
   rule(:seperator => simple(:seperator)){nil}
 end

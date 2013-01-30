@@ -18,6 +18,7 @@ end
 group :db do
   gem "romkan"
   gem "data_mapper"
+  gem 'dm-chunked_query'
   gem "dm-sqlite-adapter"
 end
 

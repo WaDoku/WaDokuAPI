@@ -22,6 +22,8 @@ class TextTransform < Parslet::Transform
     contents.empty? ? nil :  "(#{contents.compact.join("; ")})" 
   end
   rule(:title_type => simple(:title_type)) {nil}
+  rule(:kimulem => simple(:kimulem)) {nil}
+  rule(:dij => simple(:dij)) {nil}
   rule(:scientif => sequence(:contents)) {"Scientif.: " + contents.compact.join}
   rule(:date => simple(:date)) {date}
   rule(:usage => simple(:usage)) {usage}

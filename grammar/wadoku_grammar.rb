@@ -17,6 +17,9 @@ class WadokuGrammar < Parslet::Parser
   rule(:transcr) { (str("<Transcr.:") >> space? >> transcr_content.repeat(0) >> space? >> str(">")).as(:transcr)}
   rule(:transcr_content) {text | emph}
 
+  rule(:kimulem) { str("<KimuLem:") >> space? >> non_closing.as(:kimulem) >> space? >> str(">")}
+  rule(:dij) { str("<DIJ:") >> space? >> non_closing.as(:dij) >> space? >> str(">")}
+
   rule(:jap) { str("<Jap.:") >> space? >> non_closing.as(:jap) >> space? >> str(">")}
   rule(:daid) { str("<DaID:") >> space? >> non_closing.as(:daid) >> space? >> str(">")}
   rule(:steinhaus) { (str("<Steinhaus:") >> space? >> (s_number | str(",") | space).repeat(1) >> space? >> str(">")).as(:steinhaus)}
@@ -144,7 +147,7 @@ class WadokuGrammar < Parslet::Parser
 
   rule(:tags_with_parens) {(str("(") >> space? >> parens_content.repeat(1) >> space? >> str(")")).as(:tags_with_parens)}
 
-  rule(:parens_content) {usage | defi | expl | pict | audio | ref | descr | seperator | space | etym | birthdeath | langniv | scientif | seasonw | date | steinhaus | url | jwd | wiki }
+  rule(:parens_content) { kimulem | dij | usage | defi | expl | pict | audio | ref | descr | seperator | space | etym | birthdeath | langniv | scientif | seasonw | date | steinhaus | url | jwd | wiki }
 
   rule(:tags_with_parens?) { tags_with_parens.maybe}
 
@@ -195,6 +198,7 @@ class WadokuGrammar < Parslet::Parser
   rule(:full_entry) { ( preamble? >> (mgr_with_a_b.repeat(1) | any_mgr.repeat(1)) >> space? >> tags_with_parens? >> space? >> str(".").maybe >> space? >> tags_with_parens? >> str(".").maybe).as(:full_entry)}
 
   rule(:mgr_with_a_b) { str("[") >> thing >> str("]") >> space? >> tags_with_parens? >> space? >> any_mgr.repeat(1) }
+
 
 
 # Misc

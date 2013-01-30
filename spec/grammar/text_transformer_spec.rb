@@ -23,6 +23,14 @@ describe TextTransform do
     res.should == "Artischocke (f)"
   end
 
+  it "should remove Kimulems and DIJ (for now)" do
+    text = '(<POS: Interj.>) (<Usage: onomat.>) [1]<MGr: <TrE: ah!>; <TrE: ach!>; <TrE: ach ja!>; <TrE: huch!>; <TrE: oh!>; <TrE: oje!>; <TrE: nein!>; <TrE: oh nein!> (<Expl.: Ausruf bei Überraschung, Erstaunen, Erschrecken, Schmerz, Enttäuschung>)> // <MGr: <TrE: ach, ja>; <TrE: ja>; <TrE: ja, richtig>; <TrE: ja, genau>; <TrE: äh>; <TrE: ähm> (<Expl.: Ausruf, wenn einem etwas wieder einfällt>)>. (<Ref.: ⇒ <Transcr.: ă> <Jap.: あっ><DaID: 5646032>>；<Ref.: ⇒ <Transcr.: ā> <Jap.: ああ><DaID: 9277371>>). [2] <MGr: <TrE: he>; <TrE: heh>; <TrE: hallo> (<Expl.: Ausruf, um jmdn. anzusprechen>；<Ref.: ⇒ <Transcr.: ā> <Jap.: ああ><DaID: 9277371>>)>. [3]<MGr: <TrE: ja!>; <TrE: jawohl!>; <TrE: hier!> (<Expl.: Antwort darauf, dass man gerufen wird>；<Ref.: ⇒ <Transcr.: ā> <Jap.: ああ><DaID: 9277371>>)>. (<KimuLem: 1>；<DIJ: 33>).'
+    parse = grammar.parse_with_debug(text)
+    res = transformer.apply(parse).to_s
+    res.should_not include("kimulem")
+    res.should_not include("dij")
+  end
+
   it "should transform complete entries" do
     text = "(<POS: N.>) <MGr: {<Dom.: Bot.>} <TrE: <HW f: Artischocke>> (<Scientif.: Cynara scolymus>)>."
     tree = grammar.parse(text)

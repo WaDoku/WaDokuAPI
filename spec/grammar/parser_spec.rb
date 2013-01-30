@@ -413,4 +413,21 @@ describe WadokuGrammar do
 
   end
 
+  # Reason:
+  # Don't know what to do with "(<KimuLem:" at line 1 char 784.
+  it 'should parse KimuLems and DIJ' do
+
+    text = "<KimuLem: 1>"
+    parse = grammar.kimulem.parse_with_debug(text)
+    parse.should_not be_nil
+
+    text = "(<KimuLem: 1>；<DIJ: 33>)"
+    parse = grammar.tags_with_parens.parse_with_debug(text)
+    parse.should_not be_nil
+
+    text = '(<POS: Interj.>) (<Usage: onomat.>) [1]<MGr: <TrE: ah!>; <TrE: ach!>; <TrE: ach ja!>; <TrE: huch!>; <TrE: oh!>; <TrE: oje!>; <TrE: nein!>; <TrE: oh nein!> (<Expl.: Ausruf bei Überraschung, Erstaunen, Erschrecken, Schmerz, Enttäuschung>)> // <MGr: <TrE: ach, ja>; <TrE: ja>; <TrE: ja, richtig>; <TrE: ja, genau>; <TrE: äh>; <TrE: ähm> (<Expl.: Ausruf, wenn einem etwas wieder einfällt>)>. (<Ref.: ⇒ <Transcr.: ă> <Jap.: あっ><DaID: 5646032>>；<Ref.: ⇒ <Transcr.: ā> <Jap.: ああ><DaID: 9277371>>). [2] <MGr: <TrE: he>; <TrE: heh>; <TrE: hallo> (<Expl.: Ausruf, um jmdn. anzusprechen>；<Ref.: ⇒ <Transcr.: ā> <Jap.: ああ><DaID: 9277371>>)>. [3]<MGr: <TrE: ja!>; <TrE: jawohl!>; <TrE: hier!> (<Expl.: Antwort darauf, dass man gerufen wird>；<Ref.: ⇒ <Transcr.: ā> <Jap.: ああ><DaID: 9277371>>)>. (<KimuLem: 1>；<DIJ: 33>).'
+    parse = grammar.parse_with_debug(text)
+    parse.should_not be_nil
+  end
+  
 end

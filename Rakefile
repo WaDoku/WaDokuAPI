@@ -1,7 +1,9 @@
 require "bundler"
 require 'rspec/core/rake_task'
+require 'pry'
 
 ROOT_DIR=File.expand_path(File.dirname(__FILE__))
+ENV["RACK_ENV"] ||= "development"
 
 task :default => "fresh_spec"
 
@@ -16,6 +18,50 @@ task :spec do
   RSpec::Core::RakeTask.new(:spec) do |t|
     t.pattern = './spec/**/*_spec.rb'
   end
+end
+
+desc 'Find a non-parsing entry and build a test case'
+task :find_non_parsing do
+  Bundler.require(:db)
+  require 'parslet'
+  require_relative 'grammar/wadoku_grammar'
+
+  SOURCE_FILE = ENV["WADOKU_SOURCE"] || tab_file
+
+  require_relative 'db/config'
+  require_relative 'app/models/entry'
+
+  non_parsing = nil
+  error = nil
+  grammar = WadokuGrammar.new
+  Entry.each_chunk(20) do |chunk|
+    chunk.each do |entry|
+      begin
+        grammar.parse entry.definition
+      rescue => e
+        error = e
+        non_parsing = entry
+      end
+      break if non_parsing
+    end
+    break if non_parsing
+  end
+
+  str = """
+  # Reason:
+  # #{error}
+  it 'should parse this' do
+    text = '#{non_parsing.definition}'
+    parse = grammar.parse_with_debug(text)
+    parse.should_not be_nil
+  end
+  """
+  puts "Found, adding this to spec/grammar/parser_spec.rb:"
+  puts str
+  path = 'spec/grammar/parser_spec.rb'
+  filetext = File.read(path)
+  filetext[/end[\n]?\z/] = str + "\nend"
+  File.write(path, filetext)
 end
 
 desc "Fill database, fill index, than run specs"
@@ -49,7 +95,8 @@ task :fill_db do
   source = open(SOURCE_FILE).read
 
   Entry.transaction do
-    source.each_line do |line|
+    source.each_line.with_index do |line, index|
+      next if index == 0
       entry_txt = line.split("\t") 
 
       Entry.create(:wadoku_id => entry_txt[0],
