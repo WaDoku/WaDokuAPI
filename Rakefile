@@ -1,15 +1,24 @@
 require "bundler"
 require 'rspec/core/rake_task'
+require "pry"
 
 ROOT_DIR=File.expand_path(File.dirname(__FILE__))
 
-task :default => "spec"
+task :default => "fresh_spec"
 
 desc "Run specs"
 task :spec do
   RSpec::Core::RakeTask.new(:spec) do |t|
     t.pattern = './spec/**/*_spec.rb'
   end
+end
+
+desc "Fill database, fill index, than run specs"
+task :fresh_spec do
+  ENV["RACK_ENV"] = "test"
+  task(:fill_db).invoke
+  task(:index_picky).invoke
+  task(:spec).invoke
 end
 
 def tab_file
