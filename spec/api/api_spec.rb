@@ -32,7 +32,6 @@ describe WadokuSearchAPI do
     describe "direct Picky" do
       it 'should answer direct picky queries' do
         get "/api/v1/picky?query=japan"
-        binding.pry
         last_json["total"].should_not be_nil
       end
 

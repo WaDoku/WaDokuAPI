@@ -17,8 +17,9 @@ end
            :stopwords =>         /\b(und|der|ein|die|das|eine)\b/i,
            :splits_text_on =>    /[\s;\(\)\[\]<>]/
 
-  category :romaji
+  category :romaji, weights: Picky::Weights::Logarithmic.new(+4)
   category :definition
+  category :tres, weights: Picky::Weights::Logarithmic.new(+6)
 end
 
 WadokuSearch = Picky::Search.new(@japanese_index, @romaji_index) do
@@ -27,7 +28,5 @@ WadokuSearch = Picky::Search.new(@japanese_index, @romaji_index) do
   searching removes_characters: /[^\p{Han}\p{Katakana}\p{Hiragana}a-zA-Z0-9\s\/\-\_\&\.\"\~\*\:\,]/i, # Picky needs control chars *"~:, to pass through.
             stopwords:          /\b(and|the|of|it|in|for)\b/i,
             splits_text_on:     /[\s\/\-\&]+/
-
-  boost [:romaji] => +6
 end
 

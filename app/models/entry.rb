@@ -16,4 +16,8 @@ class Entry
   def romaji
     kana.to_roma
   end
+
+  def tres
+    self.definition.scan(/<TrE:([^>]+)>/).flatten.map(&:strip).join(" ")
+  end
 end

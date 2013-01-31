@@ -14,7 +14,6 @@ require_relative "db/config"
 require_relative 'app/models/entry'
 require_relative 'app/models/json_entry'
 
-require_relative "picky/misc"
 require_relative "picky/indexes"
 Picky::Indexes.load
 
