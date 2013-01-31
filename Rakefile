@@ -84,10 +84,19 @@ desc "Fill DB from tab file"
 task :fill_db do
 
   Bundler.require(:db)
+  require 'parslet'
+  require_relative 'app/extensions'
   SOURCE_FILE = ENV["WADOKU_SOURCE"] || tab_file
 
   require_relative 'db/config'
   require_relative 'app/models/entry'
+  require_relative 'grammar/wadoku_grammar'
+  require_relative 'grammar/html_transform'
+  require_relative 'grammar/text_transform'
+
+  grammar = WadokuGrammar.new
+  plain_transformer = TextTransform.new
+  html_transformer = HTMLTransform.new
 
   # Clear everything
   DataMapper.auto_migrate!
@@ -99,10 +108,38 @@ task :fill_db do
       next if index == 0
       entry_txt = line.split("\t") 
 
+      definition_html = nil
+      definition_plain = nil
+      audio_url = nil
+      picture_url = nil
+      picture_caption = nil
+      begin
+        parsed = grammar.parse(entry_txt[3])
+        definition_html = html_transformer.apply(parsed).to_s
+        definition_plain = plain_transformer.apply(parsed).to_s
+
+        pict = parsed.subtree(:pict).first
+        if pict then
+          picture_caption = pict[:pict][:capt]
+          picture_url = "/svg/#{pict[:pict][:filen]}.svg"
+        end
+
+        audio = parsed.subtree(:audio).first
+        if audio then
+          audio_url = "/audio/#{audio[:audio][:text]}.mp3"
+        end
+      rescue => e
+      end
+
       Entry.create(:wadoku_id => entry_txt[0],
                    :writing => entry_txt[1], 
                    :kana => entry_txt[2] , 
                    :definition => entry_txt[3], 
+                   :definition_html => definition_html, 
+                   :definition_plain => definition_plain, 
+                   :audio_url => audio_url,
+                   :picture_url => picture_url,
+                   :picture_caption => picture_caption,
                    :pos => entry_txt[4],
                    :relation => entry_txt[5],
                    :relation_description => entry_txt[6],

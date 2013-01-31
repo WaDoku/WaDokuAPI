@@ -12,6 +12,11 @@ class Entry
   property :relation_kind, String
   property :romaji_help, String
   property :midashigo, String
+  property :definition_html, Text
+  property :definition_plain, Text
+  property :audio_url, String
+  property :picture_url, String
+  property :picture_caption, String
 
   def romaji
     kana.to_roma

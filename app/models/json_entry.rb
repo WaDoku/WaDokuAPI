@@ -16,9 +16,17 @@ class JsonEntry
 
     return error("Invalid WaDoku id.") unless @entry
 
+    parsed = nil
     begin
-      parsed = @@grammar.parse @entry.definition
-      definition = transformer.apply parsed
+      if format == "html" && @entry.definition_html
+        definition = @entry.definition_html
+      elsif format == "plain" && @entry.definition_plain
+        definition = @entry.definition_plain
+      else
+        parsed = @@grammar.parse @entry.definition
+        definition = transformer.apply parsed
+      end
+
       res = {
         writing: @entry.writing,
         midashigo: (@entry.midashigo.strip == "" ? @entry.writing : @entry.midashigo),
@@ -29,7 +37,7 @@ class JsonEntry
       add_picture res, parsed
       add_audio res, parsed
       return res
-    rescue => reason
+    rescue Parslet::ParseFailed => reason
       return error(reason)
     end
   end
@@ -55,19 +63,29 @@ class JsonEntry
 
   # Adds a picture to the hash iff one is present
   def add_picture hash, tree
-    pict = tree.subtree(:pict).first
-    if pict then
-      hash[:caption] = pict[:pict][:capt]
-      hash[:picture] = "/svg/#{pict[:pict][:filen]}.svg"
+    if @entry.picture_url
+      hash[:caption] = @entry.picture_caption
+      hash[:picture] = @entry.picture_url
+    elsif tree
+      pict = tree.subtree(:pict).first
+      if pict then
+        hash[:caption] = pict[:pict][:capt]
+        hash[:picture] = "/svg/#{pict[:pict][:filen]}.svg"
+      end
     end
     hash
   end
 
   # Adds an audio link to the hash iff one is present
   def add_audio hash, tree
-    audio = tree.subtree(:audio).first
-    if audio then
-        hash[:audio] = "/audio/#{audio[:audio][:text]}.mp3"
+    if @entry.audio_url
+      hash[:audio] = @entry.audio_url
+    elsif tree
+      audio = tree.subtree(:audio).first
+      if audio then
+          hash[:audio] = "/audio/#{audio[:audio][:text]}.mp3"
+      end
     end
+    hash
   end
 end
