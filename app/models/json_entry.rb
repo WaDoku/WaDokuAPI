@@ -32,7 +32,8 @@ class JsonEntry
         midashigo: (@entry.midashigo.strip == "" ? @entry.writing : @entry.midashigo),
         kana: @entry.kana,
         furigana: @entry.kana[/^[^\[\s]+/],
-        definition: definition
+        definition: definition,
+        sub_entries: sub_entries
       }
       add_picture res, parsed
       add_audio res, parsed
@@ -56,6 +57,14 @@ class JsonEntry
   end
 
   private
+
+  def sub_entries
+    hash = (Entry.all(:relation => @entry.writing) + Entry.all(:relation => "HE\v#{@entry.writing}")).map{|e| [e.wadoku_id, e.relation_description]}.group_by{|e| e[1]}
+    hash.keys.each do |key|
+      hash[key] = hash[key].map(&:first).flatten
+    end
+    hash
+  end
 
   def error reason
     {error: reason}

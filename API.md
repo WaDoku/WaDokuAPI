@@ -6,10 +6,8 @@
 
 ## Optional paramaters:
 
-- format: May be json. Defaults to json.
-- definition\_format: May be html, text. Defaults to text.
+- format: May be html or plain.
 - offset: Start returning results from offset position. Defaults to 0.
-- include\_related: Include related entries in results.
 
 ## Output
 
@@ -28,8 +26,13 @@
         writing: "...",
         kana: "...",
         romaji: "...",
-        definition: "...."
-        sub_entries: [2,3,4] // These are WaDoku IDs
+        definition: "...." // In html or plain text
+        sub_entries: {
+          "Abl. mit <Umschr.: da>": [1, 2, 3],
+          "Abl. mit <Umschr.: suru>": [4, 5, 6],
+          ...
+        }
+        }
       }
     ]
   }

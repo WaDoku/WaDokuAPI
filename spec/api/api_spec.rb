@@ -25,6 +25,19 @@ describe WadokuSearchAPI do
       hash = JsonEntry.new(Entry.get(3)).to_hash
       hash[:audio].should be_nil
     end
+
+    it 'should contain a field with subentries' do
+      hash = JsonEntry.new(Entry.get(5372)).to_hash
+      hash[:sub_entries].should_not be_empty
+
+      hash = JsonEntry.new(Entry.get(1)).to_hash
+      hash[:sub_entries].should be_empty
+    end
+
+    it 'should group subentries' do
+      hash = JsonEntry.new(Entry.get(5372)).to_hash
+      hash[:sub_entries].keys.size.should be 3
+    end
   end
 
   describe "API v1" do
