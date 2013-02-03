@@ -19,6 +19,11 @@ describe WadokuSearchAPI do
       hash[:picture].should be_nil
     end
 
+    it 'should add a subentry midashigo if appropriate' do
+      hash = JsonEntry.new(Entry.get(7)).to_hash
+      hash[:subentry_midashigo].should eq "~男"
+    end
+
     it 'should have an audio property iff one is present in the entry' do
       hash = JsonEntry.new(Entry.get(4)).to_hash
       hash[:audio].should_not be_nil

@@ -38,6 +38,12 @@ class JsonEntry
         sub_entries: sub_entries(options[:full_subentries])
       }
 
+      if @entry.relation_kind.strip != ""
+        s = @entry.relation_kind.strip
+        s[/<.+>/] = "~"
+        res[:subentry_midashigo] = s
+      end
+
       add_picture res, parsed
       add_audio res, parsed
       return res
