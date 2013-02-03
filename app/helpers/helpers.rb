@@ -5,11 +5,14 @@ class WadokuSearchAPI < Sinatra::Base
       WadokuSearch.search(params[:query], 30, params[:offset])
     end
 
-    def make_results search, format, callback
+    # TODO move this to a model.
+    def make_results search, options = {}
+      options[:format] ||= "html"
+      callback = options.delete(:callback)
       ids = search.ids
       @entries = Entry.all(id: ids)
 
-      results = @entries.map{|entry| JsonEntry.new(entry).to_hash({format: format, callback: callback})}
+      results = @entries.map{|entry| JsonEntry.new(entry).to_hash(options)}
 
       # Don't give out errored entries.
       results = results.reject {|entry| entry[:error]}

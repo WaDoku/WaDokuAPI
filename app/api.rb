@@ -5,7 +5,8 @@ class WadokuSearchAPI < Sinatra::Base
 
   get "/api/v1/search" do
     @res = search(params)
-    make_results @res, params[:format] || "html", params[:callback]
+    options = Hash[params.map{|k,v|[k.to_sym, v]}] # Symbolize all options
+    make_results @res, options
   end
 
   get "/api/v1/entry/:daid" do

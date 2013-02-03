@@ -34,6 +34,15 @@ describe WadokuSearchAPI do
       hash[:sub_entries].should be_empty
     end
 
+    it 'should have an option to enable full subentries' do
+      hash = JsonEntry.new(Entry.get(5372)).to_hash
+      hash[:sub_entries].first[:entries].first[:wadoku_id].should_not be_nil
+      hash[:sub_entries].first[:entries].first[:midashigo].should be_nil
+
+      hash = JsonEntry.new(Entry.get(5372)).to_hash({full_subentries: true})
+      hash[:sub_entries].first[:entries].first[:midashigo].should_not be_nil
+    end
+
     it 'should group subentries' do
       hash = JsonEntry.new(Entry.get(5372)).to_hash
       hash[:sub_entries].size.should be 3
@@ -75,6 +84,15 @@ describe WadokuSearchAPI do
       it 'should wrap the entries with a callback when given the parameter' do
         get '/api/v1/search?query=japan&callback=rspec'
         last_response.body.to_s.should start_with('rspec(')
+      end
+
+      it 'should return full subentries when they are requested' do
+        get '/api/v1/search?query=aoi'
+        last_json["entries"][1]["sub_entries"][0]["entries"][0]["midashigo"].should be_nil
+        last_json["entries"][1]["sub_entries"][0]["entries"][0]["wadoku_id"].should_not be_nil
+
+        get '/api/v1/search?query=aoi&full_subentries=true'
+        last_json["entries"][1]["sub_entries"][0]["entries"][0]["midashigo"].should_not be_nil
       end
 
     end

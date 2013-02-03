@@ -1,3 +1,4 @@
+#encoding: utf-8
 class JsonEntry
   def initialize entry
     @@grammar ||= WadokuGrammar.new
@@ -28,13 +29,15 @@ class JsonEntry
       end
 
       res = {
+        wadoku_id: @entry.wadoku_id,
         writing: @entry.writing,
-        midashigo: (@entry.midashigo.strip == "" ? @entry.writing : @entry.midashigo),
+        midashigo: (@entry.midashigo.strip == "" ? @entry.writing.split(";").first : @entry.midashigo),
         kana: @entry.kana,
         furigana: @entry.kana[/^[^\[\s]+/],
         definition: definition,
-        sub_entries: sub_entries
+        sub_entries: sub_entries(options[:full_subentries])
       }
+
       add_picture res, parsed
       add_audio res, parsed
       return res
@@ -58,13 +61,39 @@ class JsonEntry
 
   private
 
-  def sub_entries
-    hash = (Entry.all(:relation => @entry.writing) + Entry.all(:relation => "HE\v#{@entry.writing}")).map{|e| [e.wadoku_id, e.relation_description]}.group_by{|e| e[1]}
+  # If the argument is true, entries will be returned in full. If not, only the IDs will be available.
+  def sub_entries full = false
+    hash = (Entry.all(:relation => @entry.writing) + Entry.all(:relation => "HE\v#{@entry.writing}"))
+      .map{|e| [full ? JsonEntry.new(e).to_hash : { wadoku_id: e.wadoku_id} , e.relation_description]}
+      .group_by{|e| e[1]}
+
     hash.keys.each do |key|
       hash[key] = hash[key].map(&:first).flatten
     end
-    hash.inject([]) do |result, (k, v)|
-      result << {relation: k, wadoku_ids: v}
+
+    res = hash.inject([]) do |result, (k, v)|
+      result << {relation: k, entries: v}
+    end
+
+    # Replace the relations with symbols
+    res.map do |obj|
+      relation = obj[:relation]
+      relation = case relation.strip
+                 when "Komp. Anf."
+                   "▷"
+                 when "Komp. Hint."
+                   "◁"
+                 when /^Abl. mit <Umschr.:(.*)>$/
+                   "→ #{$1}"
+                 when "Verwendungsbeispiel"
+                   "☆"
+                 when "XSatz"
+                   "□"
+                 else
+                   relation
+                 end
+      obj[:relation] = relation
+      obj
     end
   end
 
