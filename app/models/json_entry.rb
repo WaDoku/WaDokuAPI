@@ -63,7 +63,9 @@ class JsonEntry
     hash.keys.each do |key|
       hash[key] = hash[key].map(&:first).flatten
     end
-    hash
+    hash.inject([]) do |result, (k, v)|
+      result << {relation: k, wadoku_ids: v}
+    end
   end
 
   def error reason

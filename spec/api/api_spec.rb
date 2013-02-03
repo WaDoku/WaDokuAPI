@@ -36,7 +36,7 @@ describe WadokuSearchAPI do
 
     it 'should group subentries' do
       hash = JsonEntry.new(Entry.get(5372)).to_hash
-      hash[:sub_entries].keys.size.should be 3
+      hash[:sub_entries].size.should be 3
     end
   end
 
