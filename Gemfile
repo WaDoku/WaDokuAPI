@@ -13,6 +13,7 @@ end
 
 group :picky do
   gem "picky"
+  gem 'procrastinate'
 end
 
 group :db do
