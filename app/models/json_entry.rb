@@ -90,7 +90,7 @@ class JsonEntry
                  when "Komp. Hint."
                    "◁"
                  when /^Abl. mit <Umschr.:(.*)>$/
-                   "→ #{$1}"
+                   "→ #{$1.to_s.to_kana}"
                  when "Verwendungsbeispiel"
                    "☆"
                  when "XSatz"
