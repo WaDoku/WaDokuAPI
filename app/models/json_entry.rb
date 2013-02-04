@@ -81,6 +81,8 @@ class JsonEntry
       result << {relation: k, entries: v}
     end
 
+    res = res.sort_by{|obj| obj[:relation]}
+
     # Replace the relations with symbols
     res.map do |obj|
       relation = obj[:relation]
