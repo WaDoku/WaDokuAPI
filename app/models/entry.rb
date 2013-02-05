@@ -1,3 +1,4 @@
+#encoding: utf-8
 class Entry
   include DataMapper::Resource
 
@@ -24,5 +25,9 @@ class Entry
 
   def tres
     self.definition.scan(/<TrE:([^>]+)>/).flatten.map(&:strip).join(" ")
+  end
+
+  def writing_kanji
+    self.writing.scan(/\p{Han}+/).join(" ")
   end
 end

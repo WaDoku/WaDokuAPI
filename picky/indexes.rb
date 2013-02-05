@@ -7,7 +7,8 @@
            :stopwords =>         /\b(and|the|of|it|in|for)\b/i,
            :splits_text_on =>    /[\s;\(\)\[\]]/
 
-  category :writing
+  category :writing, weights: Picky::Weights::Logarithmic.new(+4)
+  category :writing_kanji
   category :kana
 end
 
@@ -19,7 +20,6 @@ end
 
   category :romaji, weights: Picky::Weights::Logarithmic.new(+4)
   category :definition
-  category :tres, weights: Picky::Weights::Logarithmic.new(+6)
 end
 
 WadokuSearch = Picky::Search.new(@japanese_index, @romaji_index) do
