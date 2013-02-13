@@ -6,12 +6,15 @@
 
 ## Optional paramaters:
 
-- format: May be html or plain.
+- format: May be html or plain. Defaults to html.
 - offset: Start returning results from offset position. Defaults to 0.
+- limit: How many records should be returned.
+- callback: Returns everything wrapped in the given callback for JSONP.
+- full_sub_entries: If true, sub_entries will be returned as full entries instead of just the WaDoku id.
 
 ## Output
 
-  Returns 30 results. Use total to see how many results there are
+  Returns 30 results as default. Use total to see how many results there are
   overall.
 
   Example:
@@ -28,10 +31,10 @@
         romaji: "...",
         definition: "...." // In html or plain text
         sub_entries: {
-          "Abl. mit <Umschr.: da>": [1, 2, 3],
-          "Abl. mit <Umschr.: suru>": [4, 5, 6],
+          "→ する", [9, 10],
+          "▷": [1, 2, 3],
+          "☆": [4, 5, 6],
           ...
-        }
         }
       }
     ]
