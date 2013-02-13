@@ -98,6 +98,7 @@ task :fill_db do
   plain_transformer = TextTransform.new
   html_transformer = HTMLTransform.new
 
+  `mkdir -p db/sqlite`
   # Clear everything
   DataMapper.auto_migrate!
 
