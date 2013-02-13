@@ -2,7 +2,8 @@ class WadokuSearchAPI < Sinatra::Base
   helpers do
     def search params
       params[:offset] ||= 0
-      WadokuSearch.search(params[:query], 30, params[:offset])
+      params[:limit] ||= 30
+      WadokuSearch.search(params[:query], params[:limit], params[:offset])
     end
 
     # TODO move this to a model.
@@ -20,6 +21,7 @@ class WadokuSearchAPI < Sinatra::Base
       res = {
         total: search.total,
         query: search.query,
+        limit: params[:limit],
         offset: search.offset,
         entries: results
       }

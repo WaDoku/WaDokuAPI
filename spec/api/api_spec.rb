@@ -69,6 +69,19 @@ describe WadokuSearchAPI do
         last_json["total"].should be 77
       end
 
+      it 'should return 30 entries by default' do
+        get '/api/v1/search?query=japan'
+        last_json["entries"].count.should be 29 # 29 because one entry doesn't parse
+      end
+
+      it 'should return the amount of entries given in the limit option' do
+        get '/api/v1/search?query=japan&limit=15'
+        last_json['entries'].count.should be 15
+
+        get '/api/v1/search?query=japan&limit=60'
+        last_json['entries'].count.should be 57 # 57 because some entries dont parse.
+      end
+
       it 'should not contain errored entries' do
         get '/api/v1/search?query=japan'
         last_json["entries"].each {|entry| entry["error"].should be_nil}
