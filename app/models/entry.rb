@@ -19,6 +19,8 @@ class Entry
   property :picture_url, String
   property :picture_caption, String
 
+  has n, :lemmas
+
   def romaji
     kana.to_roma
   end

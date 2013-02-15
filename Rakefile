@@ -1,3 +1,4 @@
+# encoding: utf-8
 require "bundler"
 require 'rspec/core/rake_task'
 require 'pry'
@@ -80,6 +81,29 @@ def tab_file
   end
 end
 
+desc 'Create search lemmata from database'
+task :create_lemmata do
+  Bundler.require(:db)
+  require_relative 'db/config'
+  require_relative 'app/models/entry'
+  require_relative 'app/models/lemma'
+
+  DataMapper.auto_upgrade!
+  Lemma.auto_migrate!
+
+  regex = /(LongKanji)|(?:\[.+?\])|(?:[^\p{Han}\p{Katakana}\p{Hiragana}\p{Latin}; ･ー])/
+
+  Lemma.transaction do
+    Entry.each do |entry|
+      lemmata = entry.writing.gsub(regex ,"").split(/[; ]/).reject{|str| str == ""}
+      lemmata.each do |lemma|
+        Lemma.create(content:lemma, entry: entry)
+      end
+    end
+  end
+
+end
+
 desc "Fill DB from tab file"
 task :fill_db do
 
@@ -90,6 +114,7 @@ task :fill_db do
 
   require_relative 'db/config'
   require_relative 'app/models/entry'
+  require_relative 'app/models/lemma'
   require_relative 'grammar/wadoku_grammar'
   require_relative 'grammar/html_transform'
   require_relative 'grammar/text_transform'
@@ -151,6 +176,7 @@ task :fill_db do
 
     end
   end
+  task(:create_lemmata).invoke
 end
 
 desc "Fill Picky indexes from database"

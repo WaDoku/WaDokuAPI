@@ -56,6 +56,13 @@ describe WadokuSearchAPI do
 
   describe "API v1" do
 
+    describe "suggestions" do
+      it 'should return suggestions for partial keywords' do
+        get "/api/v1/suggestions", {query: 'ああ'}
+        last_json["suggestions"].count.should be 12
+      end
+    end
+
     describe "direct Picky" do
       it 'should answer direct picky queries' do
         get "/api/v1/picky?query=japan"

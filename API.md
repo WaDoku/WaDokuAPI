@@ -49,3 +49,13 @@
 ## Output
 
 The parsed entry as a JSON object or a JSON object with the key "error".
+
+# GET /api/v1/suggestions
+
+## Mandatory parameters:
+
+- query: The partial query
+
+## Output
+
+A JSON object containing a key 'suggestions' with the value of an array of strings.

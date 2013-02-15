@@ -9,6 +9,11 @@ class WadokuSearchAPI < Sinatra::Base
     make_results @res, options
   end
 
+  get '/api/v1/suggestions' do
+    suggestions = Lemma.all(:content.like => params[:query] + "%").map(&:content).uniq
+    Yajl::Encoder.encode suggestions: suggestions
+  end
+
   get "/api/v1/entry/:daid" do
     @entry = Entry.first(wadoku_id: params[:daid])
     JsonEntry.new(@entry).to_json(params)
