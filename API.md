@@ -1,4 +1,4 @@
-# /api/v1/search
+# GET /api/v1/search
 
 ## Mandatory parameters:
 
@@ -40,3 +40,12 @@
     ]
   }
 
+# GET /api/v1/parse
+
+## Mandatory parameters:
+
+- markup: The markup that should be parsed.
+
+## Output
+
+The parsed entry as a JSON object or a JSON object with the key "error".

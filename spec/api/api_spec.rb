@@ -61,8 +61,24 @@ describe WadokuSearchAPI do
         get "/api/v1/picky?query=japan"
         last_json["total"].should_not be_nil
       end
-
     end
+
+    describe "parsing" do
+      it 'should return a JSON object for valid markup' do
+        entry = Entry.get 5372
+        get '/api/v1/parse', {markup: entry.definition}
+        last_json['error'].should be_nil
+      end
+
+      it 'should return an error for invalid markup' do
+        markup = '''
+          <<<>ALL WRONG
+        '''
+        get '/api/v1/parse', {markup: markup}
+        last_json['error'].should_not be_nil
+      end
+    end
+
     describe "searches" do
       it 'should give a total amount of results' do
         get '/api/v1/search?query=japan'

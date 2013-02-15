@@ -22,4 +22,15 @@ class WadokuSearchAPI < Sinatra::Base
     res = "#{params[:callback]}(#{res});" if params[:callback]
     res
   end
+
+  get '/api/v1/parse' do
+    @@grammar ||= WadokuGrammar.new
+    markup = params[:markup]
+    begin
+      parse = @@grammar.parse markup
+      Yajl::Encoder.encode parse
+    rescue Parslet::ParseFailed => e
+      Yajl::Encoder.encode({error: e})
+    end
+  end
 end
