@@ -11,7 +11,9 @@ class WadokuSearchAPI < Sinatra::Base
 
   get '/api/v1/suggestions' do
     suggestions = Lemma.all(:content.like => params[:query] + "%").map(&:content).uniq
-    Yajl::Encoder.encode suggestions: suggestions
+    res = Yajl::Encoder.encode suggestions: suggestions
+    res = "#{params[:callback]}(#{res});" if params[:callback]
+    res
   end
 
   get "/api/v1/entry/:daid" do
