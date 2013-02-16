@@ -6,11 +6,12 @@
 
 ## Optional paramaters:
 
+- mode: May be 'fuzzy', 'forward' or 'backward'. Forward and backward search ONLY in headwords, fuzzy searches everywhere and tries to weigh the results. Defaults to fuzzy.
 - format: May be html or plain. Defaults to html.
 - offset: Start returning results from offset position. Defaults to 0.
-- limit: How many records should be returned.
+- limit: How many records should be returned. Defaults to 30.
 - callback: Returns everything wrapped in the given callback for JSONP.
-- full_sub_entries: If true, sub_entries will be returned as full entries instead of just the WaDoku id.
+- full_sub_entries: If true, sub_entries will be returned as full entries instead of just the WaDoku id. Defaults to false.
 
 ## Output
 

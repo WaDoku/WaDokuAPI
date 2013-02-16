@@ -4,9 +4,7 @@ class WadokuSearchAPI < Sinatra::Base
   set :logging, true
 
   get "/api/v1/search" do
-    @res = search(params)
-    options = Hash[params.map{|k,v|[k.to_sym, v]}] # Symbolize all options
-    make_results @res, options
+    res = Results.new(params.delete("query"), params).to_json
   end
 
   get '/api/v1/suggestions' do

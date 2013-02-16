@@ -8,7 +8,7 @@ class JsonEntry
   end
 
   def to_hash options = {}
-    format = options[:format] || "html"
+    format = options["format"] || "html"
 
     case format
       when 'html' then transformer = @@html_transformer
@@ -35,7 +35,7 @@ class JsonEntry
         kana: @entry.kana,
         furigana: @entry.kana[/^[^\[\s]+/],
         definition: definition,
-        sub_entries: sub_entries(options[:full_subentries])
+        sub_entries: sub_entries(options['full_subentries'])
       }
 
       if @entry.relation_kind.strip != ""
@@ -53,8 +53,8 @@ class JsonEntry
   end
 
   def to_json options = {}
-    format = options[:format] || "html"
-    callback = options[:callback] || nil
+    format = options['format'] || "html"
+    callback = options['callback'] || nil
 
     res = to_hash options
 

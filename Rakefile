@@ -132,7 +132,7 @@ task :fill_db do
   Entry.transaction do
     source.each_line.with_index do |line, index|
       next if index == 0
-      entry_txt = line.split("\t") 
+      entry_txt = line.split("\t")
 
       definition_html = nil
       definition_plain = nil
@@ -161,7 +161,7 @@ task :fill_db do
       rescue => e
       end
 
-      Entry.create(:wadoku_id => entry_txt[0],
+      entry = Entry.create(:wadoku_id => entry_txt[0],
                    :writing => entry_txt[1], 
                    :kana => entry_txt[2] , 
                    :definition => entry_txt[3], 
@@ -178,6 +178,7 @@ task :fill_db do
                    :romaji_help => entry_txt[9],
                    :tres => tres
                   )
+      binding.pry unless entry.saved?
 
     end
   end
