@@ -18,15 +18,12 @@ class Entry
   property :audio_url, String
   property :picture_url, String
   property :picture_caption, String
+  property :tres, String
 
   has n, :lemmas
 
   def romaji
     kana.to_roma
-  end
-
-  def tres
-    self.definition.scan(/<TrE:([^>]+)>/).flatten.map(&:strip).join(" ")
   end
 
   def writing_kanji

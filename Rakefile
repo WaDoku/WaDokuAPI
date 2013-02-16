@@ -139,10 +139,14 @@ task :fill_db do
       audio_url = nil
       picture_url = nil
       picture_caption = nil
+      tres = nil
       begin
         parsed = grammar.parse(entry_txt[3])
         definition_html = html_transformer.apply(parsed).to_s
         definition_plain = plain_transformer.apply(parsed).to_s
+
+        tres = parsed.subtree(:tre).map{|el| el.subtree(:text).map{|h| h[:text]}.join}.join('; ')
+
 
         pict = parsed.subtree(:pict).first
         if pict then
@@ -171,7 +175,8 @@ task :fill_db do
                    :relation_description => entry_txt[6],
                    :midashigo => entry_txt[7],
                    :relation_kind => entry_txt[8],
-                   :romaji_help => entry_txt[9]
+                   :romaji_help => entry_txt[9],
+                   :tres => tres
                   )
 
     end
