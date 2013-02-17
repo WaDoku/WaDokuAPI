@@ -10,7 +10,7 @@
            :stopwords =>         /\b(and|the|of|it|in|for)\b/i,
            :splits_text_on =>    /[\s;\(\)\[\]]/
 
-  category :writing, weights: Picky::Weights::Logarithmic.new(+6)
+  category :writing, weight: Picky::Weights::Logarithmic.new(+3)
 end
 
 @japanese_index = Picky::Index.new :japanese do
@@ -29,8 +29,8 @@ end
            :stopwords =>         /\b(und|der|ein|die|das|eine)\b/i,
            :splits_text_on =>    /[\s;\(\)\[\]<>]/
 
-  category :romaji, weights: Picky::Weights::Logarithmic.new(+4)
-  category :tres, weights: Picky::Weights::Logarithmic.new(+3)
+  category :romaji, weight: Picky::Weights::Logarithmic.new(+2)
+  category :tres, weight: Picky::Weights::Logarithmic.new(+3)
   category :definition
 end
 
