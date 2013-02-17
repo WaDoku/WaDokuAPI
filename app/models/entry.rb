@@ -5,19 +5,19 @@ class Entry
   property :id, Serial
   property :wadoku_id, String, :index => true
   property :writing, String, :length => 255
-  property :kana, String
+  property :kana, Text
   property :definition, Text
   property :pos, String
   property :relation, String, :index => true, :length => 255
-  property :relation_description, String
-  property :relation_kind, String
-  property :romaji_help, String, :length => 255
-  property :midashigo, String, :length => 255
+  property :relation_description, Text
+  property :relation_kind, Text
+  property :romaji_help, Text
+  property :midashigo, Text
   property :definition_html, Text
   property :definition_plain, Text
-  property :audio_url, String, :length => 255
-  property :picture_url, String, :length => 255
-  property :picture_caption, String, :length => 255
+  property :audio_url, Text
+  property :picture_url, Text
+  property :picture_caption, Text
   property :tres, Text
 
   has n, :lemmas

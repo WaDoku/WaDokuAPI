@@ -93,11 +93,13 @@ task :create_lemmata do
 
   regex = /(LongKanji)|(?:\[.+?\])|(?:[^\p{Han}\p{Katakana}\p{Hiragana}\p{Latin}; ･ー])/
 
-  Lemma.transaction do
-    Entry.each do |entry|
-      lemmata = entry.writing.gsub(regex ,"").split(/[; ]/).reject{|str| str == ""}
-      lemmata.each do |lemma|
-        Lemma.create(content:lemma, entry: entry)
+  Entry.each_slice(1000) do |slice|
+    Lemma.transaction do
+      slice.each do |entry|
+        lemmata = entry.writing.gsub(regex ,"").split(/[; ]/).reject{|str| str == ""}
+        lemmata.each do |lemma|
+          Lemma.create(content:lemma, entry: entry)
+        end
       end
     end
   end
@@ -129,59 +131,60 @@ task :fill_db do
 
   source = open(SOURCE_FILE).read
 
-  Entry.transaction do
-    source.each_line.with_index do |line, index|
-      next if index == 0
-      entry_txt = line.split("\t")
+  source.each_line.drop(1).each_slice(1000) do |slice|
+    Entry.transaction do
+      slice.each do |line|
+        entry_txt = line.split("\t")
 
-      definition_html = nil
-      definition_plain = nil
-      audio_url = nil
-      picture_url = nil
-      picture_caption = nil
-      tres = nil
-      begin
-        parsed = grammar.parse(entry_txt[3])
-        definition_html = html_transformer.apply(parsed).to_s
-        definition_plain = plain_transformer.apply(parsed).to_s
+        definition_html = nil
+        definition_plain = nil
+        audio_url = nil
+        picture_url = nil
+        picture_caption = nil
+        tres = nil
+        begin
+          parsed = grammar.parse(entry_txt[3])
+          definition_html = html_transformer.apply(parsed).to_s
+          definition_plain = plain_transformer.apply(parsed).to_s
 
-        tres = parsed.subtree(:tre).map{|el| el.subtree(:text).map{|h| h[:text]}.join}.join('; ')
+          tres = parsed.subtree(:tre).map{|el| el.subtree(:text).map{|h| h[:text]}.join}.join('; ')
 
 
-        pict = parsed.subtree(:pict).first
-        if pict then
-          picture_caption = pict[:pict][:capt]
-          picture_url = "/svg/#{pict[:pict][:filen]}.svg"
+          pict = parsed.subtree(:pict).first
+          if pict then
+            picture_caption = pict[:pict][:capt]
+            picture_url = "/svg/#{pict[:pict][:filen]}.svg"
+          end
+
+          audio = parsed.subtree(:audio).first
+          if audio then
+            audio_url = "/audio/#{audio[:audio][:text]}.mp3"
+          end
+        rescue => e
         end
 
-        audio = parsed.subtree(:audio).first
-        if audio then
-          audio_url = "/audio/#{audio[:audio][:text]}.mp3"
-        end
-      rescue => e
+        entry = Entry.create(:wadoku_id => entry_txt[0],
+                     :writing => entry_txt[1], 
+                     :kana => entry_txt[2] , 
+                     :definition => entry_txt[3], 
+                     :definition_html => definition_html, 
+                     :definition_plain => definition_plain, 
+                     :audio_url => audio_url,
+                     :picture_url => picture_url,
+                     :picture_caption => picture_caption,
+                     :pos => entry_txt[4],
+                     :relation => entry_txt[5],
+                     :relation_description => entry_txt[6],
+                     :midashigo => entry_txt[7],
+                     :relation_kind => entry_txt[8],
+                     :romaji_help => entry_txt[9],
+                     :tres => tres
+                    )
+        binding.pry unless entry.saved?
       end
-
-      entry = Entry.create(:wadoku_id => entry_txt[0],
-                   :writing => entry_txt[1], 
-                   :kana => entry_txt[2] , 
-                   :definition => entry_txt[3], 
-                   :definition_html => definition_html, 
-                   :definition_plain => definition_plain, 
-                   :audio_url => audio_url,
-                   :picture_url => picture_url,
-                   :picture_caption => picture_caption,
-                   :pos => entry_txt[4],
-                   :relation => entry_txt[5],
-                   :relation_description => entry_txt[6],
-                   :midashigo => entry_txt[7],
-                   :relation_kind => entry_txt[8],
-                   :romaji_help => entry_txt[9],
-                   :tres => tres
-                  )
-      binding.pry unless entry.saved?
-
     end
   end
+
   task(:create_lemmata).invoke
 end
 
