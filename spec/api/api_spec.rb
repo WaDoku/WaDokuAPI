@@ -101,11 +101,11 @@ describe WadokuSearchAPI do
     describe "searches" do
       it 'should give a total amount of results' do
         get '/api/v1/search?query=japan'
-        last_json["total"].should >= 30 
+        last_json["total"].should == 3
       end
 
       it 'should return 30 entries by default' do
-        get '/api/v1/search?query=japan'
+        get '/api/v1/search', {query: 'あ'}
         last_json["entries"].count.should <= 30 # 29 because one entry doesn't parse
       end
 
