@@ -15,6 +15,7 @@ task :spec do
   require_relative 'grammar/wadoku_grammar'
   require_relative 'grammar/html_transform'
   require_relative 'grammar/text_transform'
+  require_relative 'grammar/tre_filter'
 
   RSpec::Core::RakeTask.new(:spec) do |t|
     t.pattern = './spec/**/*_spec.rb'
@@ -120,6 +121,7 @@ task :fill_db do
   require_relative 'grammar/wadoku_grammar'
   require_relative 'grammar/html_transform'
   require_relative 'grammar/text_transform'
+  require_relative 'grammar/tre_filter'
 
   grammar = WadokuGrammar.new
   plain_transformer = TextTransform.new
@@ -136,6 +138,7 @@ task :fill_db do
       slice.each do |line|
         entry_txt = line.split("\t")
 
+        parsed = nil
         definition_html = nil
         definition_plain = nil
         audio_url = nil
@@ -146,9 +149,6 @@ task :fill_db do
           parsed = grammar.parse(entry_txt[3])
           definition_html = html_transformer.apply(parsed).to_s
           definition_plain = plain_transformer.apply(parsed).to_s
-
-          tres = parsed.subtree(:tre).map{|el| el.subtree(:text).map{|h| h[:text]}.join}.join('; ')
-
 
           pict = parsed.subtree(:pict).first
           if pict then
@@ -177,9 +177,10 @@ task :fill_db do
                      :relation_description => entry_txt[6],
                      :midashigo => entry_txt[7],
                      :relation_kind => entry_txt[8],
-                     :romaji_help => entry_txt[9],
-                     :tres => tres
+                     :romaji_help => entry_txt[9]
                     )
+        entry.generate_tres! parsed
+
         binding.pry unless entry.saved?
       end
     end

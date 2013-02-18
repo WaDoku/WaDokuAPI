@@ -21,3 +21,8 @@ describe WadokuSearch do
   end
 
 end
+
+describe Entry do
+  it 'should generate tres' do
+  end
+end

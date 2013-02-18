@@ -8,6 +8,7 @@ require_relative 'app/extensions'
 require_relative 'grammar/wadoku_grammar'
 require_relative 'grammar/text_transform'
 require_relative 'grammar/html_transform'
+require_relative 'grammar/tre_filter'
 
 require_relative "db/config"
 

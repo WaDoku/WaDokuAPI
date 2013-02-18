@@ -31,7 +31,7 @@ end
 
   category :romaji, weight: Picky::Weights::Logarithmic.new(+2)
   category :tres, weight: Picky::Weights::Logarithmic.new(+3)
-  category :definition
+  #category :definition
 end
 
 WadokuSearch = Picky::Search.new(@japanese_index, @romaji_index, @writing_index) do

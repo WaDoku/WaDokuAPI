@@ -29,4 +29,13 @@ class Entry
   def writing_kanji
     self.writing.scan(/\p{Han}+/).join(" ")
   end
+
+  def generate_tres! parsetree
+    return unless parsetree
+    @@tre_filter ||= TreFilter.new
+
+    self.tres = @@tre_filter.apply parsetree
+
+    self.save
+  end
 end
