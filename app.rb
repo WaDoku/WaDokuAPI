@@ -15,6 +15,7 @@ require_relative "db/config"
 # Stuff that's in the database.
 require_relative 'app/models/entry'
 require_relative 'app/models/lemma'
+require_relative 'app/models/user'
 
 # Stuff that's not.
 require_relative 'app/models/json_entry'

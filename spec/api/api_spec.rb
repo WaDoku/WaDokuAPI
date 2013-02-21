@@ -56,6 +56,43 @@ describe WadokuSearchAPI do
 
   describe "API v1" do
 
+    describe "authentication" do
+
+      before(:all) do
+        User.auto_migrate!
+        @client = User.create(:client_id => "SOME_CLIENT_ID", :client_secret => "SOME_CLIENT_SECRET")
+      end
+
+      it 'should return 403 if authentication fails' do
+        get '/api/v1/check_authentication'
+        last_response.status.should == 403
+
+        params = {
+          random_params: "Something something something",
+          client_id: @client.client_id,
+          signature: "INVALID"
+        }
+
+        get '/api/v1/check_authentication', params
+        last_response.status.should == 403
+
+      end
+
+      it 'should return normally with a valid authentication' do
+        params = {
+          random_params: "Something something something",
+          client_id: @client.client_id
+        }
+
+        text = params.sort.join
+        signature = Base64.encode64(OpenSSL::HMAC.digest('sha1', @client.client_secret, text))
+        params[:signature] = signature
+
+        get '/api/v1/check_authentication', params
+        last_response.status.should == 200
+      end
+    end
+
     describe "exact searches" do
       it 'should do forward searches' do
         get "/api/v1/search", {query: 'ああ', mode: 'forward'}

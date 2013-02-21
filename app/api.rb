@@ -1,3 +1,6 @@
+require 'openssl'
+require 'base64'
+
 class WadokuSearchAPI < Sinatra::Base
   set :static, true
   set :root, ROOT_DIR
@@ -5,6 +8,7 @@ class WadokuSearchAPI < Sinatra::Base
 
   get "/api/v1/search" do
     res = Results.new(params.delete("query"), params).to_json
+    res
   end
 
   get '/api/v1/suggestions' do
@@ -36,6 +40,29 @@ class WadokuSearchAPI < Sinatra::Base
       Yajl::Encoder.encode parse
     rescue Parslet::ParseFailed => e
       Yajl::Encoder.encode({error: e})
+    end
+  end
+
+  # A test route that just checks if your request was authenticated
+  get '/api/v1/check_authentication' do
+    authenticate_request!
+    "You successfully authenticated!"
+  end
+
+  def authenticate_request!
+    signature = params.delete('signature')
+    client = User.first(:client_id => params['client_id'])
+    unless client
+      status 403
+      return "Could not authenticate!"
+    end
+
+    text = params.sort.join()
+    valid_signature = Base64.encode64(OpenSSL::HMAC.digest('sha1', client.client_secret, text))
+
+    unless signature == valid_signature
+      status 403
+      return "Could not authenticate!"
     end
   end
 end
