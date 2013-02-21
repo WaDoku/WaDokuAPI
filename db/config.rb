@@ -7,3 +7,4 @@ def database_file
   end
 end
 DataMapper.setup(:default, "sqlite://#{ROOT_DIR}/db/sqlite/#{database_file}.sqlite3")
+DataMapper.finalize

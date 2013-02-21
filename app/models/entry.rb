@@ -6,7 +6,7 @@ class Entry
   property :wadoku_id, String, :index => true
   property :writing, String, :length => 255
   property :kana, Text
-  property :definition, Text
+  property :definition, Text, :default => ""
   property :pos, String
   property :relation, String, :index => true, :length => 255
   property :relation_description, Text
@@ -19,6 +19,7 @@ class Entry
   property :picture_url, Text
   property :picture_caption, Text
   property :tres, Text
+  property :updated_at, DateTime
 
   has n, :lemmas
 
@@ -38,4 +39,11 @@ class Entry
 
     self.save
   end
+
+  before :save do
+    self.updated_at = DateTime.now
+  end
+
+  is :versioned, :on => :updated_at
+
 end

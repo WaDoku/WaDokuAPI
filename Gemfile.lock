@@ -34,6 +34,8 @@ GEM
     dm-do-adapter (1.2.0)
       data_objects (~> 0.10.6)
       dm-core (~> 1.2.0)
+    dm-is-versioned (1.2.0)
+      dm-core (~> 1.2.0)
     dm-migrations (1.2.0)
       dm-core (~> 1.2.0)
     dm-serializer (1.2.2)
@@ -117,6 +119,7 @@ PLATFORMS
 DEPENDENCIES
   data_mapper
   dm-chunked_query
+  dm-is-versioned
   dm-sqlite-adapter
   parslet
   picky

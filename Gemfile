@@ -21,6 +21,7 @@ group :db do
   gem "data_mapper"
   gem 'dm-chunked_query'
   gem "dm-sqlite-adapter"
+  gem 'dm-is-versioned'
 end
 
 group :test do 

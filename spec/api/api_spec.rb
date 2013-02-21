@@ -1,6 +1,18 @@
 # encoding:utf-8
 require 'spec_helper'
 
+describe Entry do
+  it 'should be versioned' do
+    new_entry = Entry.create(:writing => "Something")
+    new_entry.versions.count.should == 0
+    new_entry.writing = "Something else"
+    DataMapper.finalize # Workaround for some DataMapper bug.
+    new_entry.save
+    new_entry.versions.count.should == 1
+    new_entry.destroy
+  end
+end
+
 describe WadokuSearchAPI do
 
   def app
