@@ -218,6 +218,28 @@ describe WadokuSearchAPI do
     end
 
     describe "entries" do
+
+      context 'creation' do
+
+        let!(:client) {User.create(:client_id => "SOME_CLIENT_ID", :client_secret => "SOME_CLIENT_SECRET")}
+        it 'should allow entry creation' do
+          params = {
+            writing: '賢者タイム',
+            kana: 'けんじゃたいむ',
+            pos: '名',
+            definition: '(<POS: N.>) <MGr: <Def.: Something something>>.'
+          }
+          params = sign_request params, client
+
+          expect(Entry.first(writing: '賢者タイム')).to be_nil
+
+          post '/api/v1/entry', params
+
+          expect(last_json['entry']).to be
+          expect(Entry.first(writing: '賢者タイム')).to be
+        end
+      end
+
       it 'should return a representation of an entry when given a valid wadoku id' do
         get '/api/v1/entry/0946913'
         last_json["writing"].should eq "アナクロニズム"

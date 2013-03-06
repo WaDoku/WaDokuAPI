@@ -24,7 +24,9 @@ group :db do
   gem 'dm-is-versioned'
 end
 
-group :test do 
+group :test do
   gem 'rspec'
   gem "rack-test", require: "rack/test"
+  gem 'database_cleaner'
+  gem 'dm-transactions'
 end

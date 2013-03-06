@@ -23,6 +23,18 @@ class WadokuSearchAPI < Sinatra::Base
     JsonEntry.new(@entry).to_json(params)
   end
 
+  post '/api/v1/entry' do
+    authenticate_request!
+    params.delete("client_id")
+    params.delete("signature")
+    @entry = Entry.new(params)
+    if @entry.save
+      Yajl::Encoder.encode({entry: JsonEntry.new(@entry)})
+    else
+      Yajl::Encoder.encode({error: "Could not create entry."})
+    end
+  end
+
   get "/api/v1/picky" do
     params[:offset] ||= 0
     params[:ids] ||= 30
