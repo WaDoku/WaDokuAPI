@@ -206,8 +206,7 @@ describe WadokuSearchAPI do
       context 'creation' do
 
         let!(:client) { User.create(:client_id => "SOME_CLIENT_ID", :client_secret => "SOME_CLIENT_SECRET") }
-        let!(:invalid_client) { User.new() }
-        let!(:params) do
+        let(:params) do
           {
             writing: '賢者タイム',
             kana: 'けんじゃたいむ',
@@ -215,7 +214,8 @@ describe WadokuSearchAPI do
             definition: '(<POS: N.>) <MGr: <Def.: Something something>>.'
           }
         end
-        let!(:signed_params) { sign_request params, client}
+        let(:signed_params) { sign_request params, client}
+        let(:malformed_entry_params) { h = params.dup; h[:definition] = '>>><<<>>>INVALID'; sign_request h, client}
 
         it 'should require authentications' do
           expect(Entry.first(writing: '賢者タイム')).to be_nil
@@ -234,6 +234,16 @@ describe WadokuSearchAPI do
 
           expect(last_json['entry']).to be
           expect(Entry.first(writing: '賢者タイム')).to be
+        end
+
+        it 'should reject malformed entries' do
+          expect(Entry.first(writing: '賢者タイム')).to be_nil
+
+          post '/api/v1/entry', malformed_entry_params
+
+          expect(last_response.status).to be 400
+          expect(last_json['error']).to eql 'Could not parse entry, rejecting.'
+          expect(Entry.first(writing: '賢者タイム')).to be_nil
         end
       end
 

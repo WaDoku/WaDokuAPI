@@ -27,6 +27,14 @@ class WadokuSearchAPI < Sinatra::Base
     authenticate_request!
     params.delete("client_id")
     params.delete("signature")
+
+    @@grammar ||= WadokuGrammar.new
+    begin
+      @@grammar.parse params['definition']
+    rescue Parslet::ParseFailed => e
+      halt 400, Yajl::Encoder.encode({error: 'Could not parse entry, rejecting.', message: e})
+    end
+
     @entry = Entry.new(params)
     if @entry.save
       Yajl::Encoder.encode({entry: JsonEntry.new(@entry)})
