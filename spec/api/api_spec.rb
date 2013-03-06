@@ -70,37 +70,21 @@ describe WadokuSearchAPI do
 
     describe "authentication" do
 
-      before(:all) do
-        User.auto_migrate!
-        @client = User.create(:client_id => "SOME_CLIENT_ID", :client_secret => "SOME_CLIENT_SECRET")
-      end
+      let!(:client) { User.create(:client_id => "SOME_CLIENT_ID", :client_secret => "SOME_CLIENT_SECRET") }
+      let!(:params) { {random_params: "Something Something"} }
+      let!(:signed_params) { sign_request params, client }
+      let!(:invalid_params) { i = signed_params.dup; i[:signature] = 'INVALID'; i}
 
       it 'should return 403 if authentication fails' do
-        get '/api/v1/check_authentication'
-        last_response.status.should == 403
-
-        params = {
-          random_params: "Something something something",
-          client_id: @client.client_id,
-          signature: "INVALID"
-        }
-
         get '/api/v1/check_authentication', params
         last_response.status.should == 403
 
+        get '/api/v1/check_authentication', invalid_params
+        last_response.status.should == 403
       end
 
       it 'should return normally with a valid authentication' do
-        params = {
-          random_params: "Something something something",
-          client_id: @client.client_id
-        }
-
-        text = params.sort.join
-        signature = Base64.encode64(OpenSSL::HMAC.digest('sha1', @client.client_secret, text))
-        params[:signature] = signature
-
-        get '/api/v1/check_authentication', params
+        get '/api/v1/check_authentication', signed_params
         last_response.status.should == 200
       end
     end
@@ -221,19 +205,32 @@ describe WadokuSearchAPI do
 
       context 'creation' do
 
-        let!(:client) {User.create(:client_id => "SOME_CLIENT_ID", :client_secret => "SOME_CLIENT_SECRET")}
-        it 'should allow entry creation' do
-          params = {
+        let!(:client) { User.create(:client_id => "SOME_CLIENT_ID", :client_secret => "SOME_CLIENT_SECRET") }
+        let!(:invalid_client) { User.new() }
+        let!(:params) do
+          {
             writing: '賢者タイム',
             kana: 'けんじゃたいむ',
             pos: '名',
             definition: '(<POS: N.>) <MGr: <Def.: Something something>>.'
           }
-          params = sign_request params, client
+        end
+        let!(:signed_params) { sign_request params, client}
 
+        it 'should require authentications' do
           expect(Entry.first(writing: '賢者タイム')).to be_nil
 
           post '/api/v1/entry', params
+
+          expect(last_response.status).to be 403
+          expect(last_json['error']).to eql "Could not authenticate!"
+          expect(Entry.first(writing: '賢者タイム')).to be_nil
+        end
+
+        it 'should return the created entry' do
+          expect(Entry.first(writing: '賢者タイム')).to be_nil
+
+          post '/api/v1/entry', signed_params
 
           expect(last_json['entry']).to be
           expect(Entry.first(writing: '賢者タイム')).to be

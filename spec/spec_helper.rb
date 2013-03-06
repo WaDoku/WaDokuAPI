@@ -19,8 +19,9 @@ RSpec.configure do |conf|
 end
 
 def sign_request params, user
-  text = params.sort.join
+  params = params.dup
   params[:client_id] = user.client_id
+  text = params.sort.join
   signature = Base64.encode64(OpenSSL::HMAC.digest('sha1', user.client_secret, text))
   params[:signature] = signature
   params

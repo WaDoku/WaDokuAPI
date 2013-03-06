@@ -65,16 +65,14 @@ class WadokuSearchAPI < Sinatra::Base
     signature = params.delete('signature')
     client = User.first(:client_id => params['client_id'])
     unless client
-      status 403
-      return "Could not authenticate!"
+      halt 403, Yajl::Encoder.encode({error:"Could not authenticate!"})
     end
 
     text = params.sort.join()
     valid_signature = Base64.encode64(OpenSSL::HMAC.digest('sha1', client.client_secret, text))
 
     unless signature == valid_signature
-      status 403
-      return "Could not authenticate!"
+      halt 403, Yajl::Encoder.encode({error:"Could not authenticate!"})
     end
   end
 end
