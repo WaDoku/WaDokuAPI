@@ -19,7 +19,6 @@
   overall.
 
   Example:
-  ```
   {
     total: 100,
     query: "Test",
@@ -41,7 +40,7 @@
       }
     ]
   }
-```
+
 # GET /api/v1/parse
 
 ## Mandatory parameters:

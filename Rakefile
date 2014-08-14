@@ -1,7 +1,5 @@
 # encoding: utf-8
 require "bundler"
-require 'rspec/core/rake_task'
-require 'pry'
 
 ROOT_DIR=File.expand_path(File.dirname(__FILE__))
 ENV["RACK_ENV"] ||= "development"
@@ -10,11 +8,6 @@ task :default => "fresh_spec"
 
 desc "Run specs"
 task :spec do
-  Bundler.require(:db)
-  require_relative 'app/models/entry'
-  require_relative 'app/models/lemma'
-  require_relative 'app/models/user'
-  require_relative 'db/config'
 
   require 'parslet'
   require_relative 'grammar/wadoku_grammar'
@@ -35,8 +28,8 @@ task :find_non_parsing do
 
   SOURCE_FILE = ENV["WADOKU_SOURCE"] || tab_file
 
-  require_relative 'app/models/entry'
   require_relative 'db/config'
+  require_relative 'app/models/entry'
 
   non_parsing = nil
   error = nil
@@ -90,9 +83,9 @@ end
 desc 'Create search lemmata from database'
 task :create_lemmata do
   Bundler.require(:db)
+  require_relative 'db/config'
   require_relative 'app/models/entry'
   require_relative 'app/models/lemma'
-  require_relative 'db/config'
 
   DataMapper.auto_upgrade!
   Lemma.auto_migrate!
@@ -120,10 +113,9 @@ task :fill_db do
   require_relative 'app/extensions'
   SOURCE_FILE = ENV["WADOKU_SOURCE"] || tab_file
 
+  require_relative 'db/config'
   require_relative 'app/models/entry'
   require_relative 'app/models/lemma'
-  require_relative 'app/models/user'
-  require_relative 'db/config'
   require_relative 'grammar/wadoku_grammar'
   require_relative 'grammar/html_transform'
   require_relative 'grammar/text_transform'
@@ -199,10 +191,9 @@ desc "Fill Picky indexes from database"
 task :picky_index do
   Bundler.require(:db, :picky)
 
+  require_relative 'db/config'
   require_relative 'app/models/entry'
   require_relative 'picky/indexes.rb'
-  require_relative 'db/config'
-
 
   puts "Indexing... This might take a while..."
   Picky::Indexes.index
