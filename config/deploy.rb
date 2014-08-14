@@ -10,9 +10,9 @@ set :scm, :git
 # Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
 
 set :application, "WadokuAPI"
-set :repository,  "git://github.com/Wadoku/WaDokuAPI.git"
+set :repository,  "git://rokuhara.japanologie.kultur.uni-tuebingen.de/WaDokuAPI.git"
 
-server_ip = "wadoku.eu"
+server_ip = "rokuhara.japanologie.kultur.uni-tuebingen.de"
 
 role :web, server_ip                          # Your HTTP server, Apache/etc
 role :app, server_ip                          # This may be the same as your `Web` server
@@ -46,6 +46,10 @@ namespace :deploy do
   task :restart, :roles => :app do
     run "touch #{current_path}/tmp/restart.txt"
   end
+
+  task :fix_ownership, :roles => :app do
+    run "chown -R deploy:www-data #{deploy_to}"
+  end
 end
 
 namespace :db_setup do
@@ -66,3 +70,4 @@ end
 
 after "deploy:update_code", "db_setup:link_shared"
 after "deploy:setup", "db_setup:create_shared"
+after "deploy:update_code", "deploy:fix_ownership"
