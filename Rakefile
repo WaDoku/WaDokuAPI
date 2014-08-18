@@ -4,7 +4,7 @@ require 'rspec/core/rake_task'
 require 'pry'
 
 ROOT_DIR=File.expand_path(File.dirname(__FILE__))
-ENV["RACK_ENV"] ||= "development"
+ENV["RACK_ENV"] ||= "production"
 
 task :default => "fresh_spec"
 
