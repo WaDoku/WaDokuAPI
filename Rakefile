@@ -73,9 +73,10 @@ end
 
 desc "Fill database, fill index, than run specs"
 task :fresh_spec do
-  ENV["RACK_ENV"] = "test"
+  ENV["RACK_ENV"] = "production"
   task(:fill_db).invoke
   task(:picky_index).invoke
+  task(:create_lemmata).invoke
   task(:spec).invoke
 end
 
