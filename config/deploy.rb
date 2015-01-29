@@ -30,6 +30,7 @@ set :deploy_via, :remote_cache
 set :user, "deploy"
 set :use_sudo, false
 set :git_enable_submodules, 1
+set :keep_releases, 2
 
 namespace :index do
   task :reindex do
