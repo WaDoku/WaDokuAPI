@@ -70,6 +70,14 @@ namespace :db_setup do
   end
 end
 
+namespace :rake do
+  desc "Invoke rake task"
+  task :invoke do
+    run "cd #{current_path} && bundle exec rake #{ENV['task']} RAILS_ENV=#{rails_env} --trace"
+  end
+end
+
 after "deploy:update_code", "db_setup:link_shared"
 after "deploy:setup", "db_setup:create_shared"
 after "deploy:update_code", "deploy:fix_ownership"
+after "deploy:cleanup"
