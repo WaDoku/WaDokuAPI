@@ -80,4 +80,5 @@ end
 after "deploy:update_code", "db_setup:link_shared"
 after "deploy:setup", "db_setup:create_shared"
 after "deploy:update_code", "deploy:fix_ownership"
-after "deploy:cleanup"
+after "deploy:update_code", "deploy:cleanup"
+after "rake:invoke", "deploy:fix_ownership"
