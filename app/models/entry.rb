@@ -5,21 +5,20 @@ class Entry
   property :id, Serial
   property :wadoku_id, String, :index => true
   property :writing, String, :length => 255
-  property :kana, Text, :default => ""
-  property :definition, Text, :default => ""
-  property :pos, String, :default => ""
+  property :kana, Text
+  property :definition, Text
+  property :pos, String
   property :relation, String, :index => true, :length => 255
-  property :relation_description, Text, :default => ""
-  property :relation_kind, Text, :default => ""
-  property :romaji_help, Text, :default => ""
-  property :midashigo, Text, :default => ""
-  property :definition_html, Text, :default => ""
-  property :definition_plain, Text, :default => ""
-  property :audio_url, Text, :default => ""
-  property :picture_url, Text, :default => ""
-  property :picture_caption, Text, :default => ""
-  property :tres, Text, :default => ""
-  property :updated_at, DateTime
+  property :relation_description, Text
+  property :relation_kind, Text
+  property :romaji_help, Text
+  property :midashigo, Text
+  property :definition_html, Text
+  property :definition_plain, Text
+  property :audio_url, Text
+  property :picture_url, Text
+  property :picture_caption, Text
+  property :tres, Text
 
   has n, :lemmas
 
@@ -39,11 +38,4 @@ class Entry
 
     self.save
   end
-
-  before :save do
-    self.updated_at = DateTime.now
-  end
-
-  is :versioned, :on => :updated_at
-
 end

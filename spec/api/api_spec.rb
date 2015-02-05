@@ -1,18 +1,6 @@
 # encoding:utf-8
 require 'spec_helper'
 
-describe Entry do
-  it 'should be versioned' do
-    new_entry = Entry.create(:writing => "Something")
-    new_entry.versions.count.should == 0
-    new_entry.writing = "Something else"
-    DataMapper.finalize # Workaround for some DataMapper bug.
-    new_entry.save
-    new_entry.versions.count.should == 1
-    new_entry.destroy
-  end
-end
-
 describe WadokuSearchAPI do
 
   def app
@@ -67,27 +55,6 @@ describe WadokuSearchAPI do
   end
 
   describe "API v1" do
-
-    describe "authentication" do
-
-      let!(:client) { User.create(:client_id => "SOME_CLIENT_ID", :client_secret => "SOME_CLIENT_SECRET") }
-      let!(:params) { {random_params: "Something Something"} }
-      let!(:signed_params) { sign_request params, client }
-      let!(:invalid_params) { i = signed_params.dup; i[:signature] = 'INVALID'; i}
-
-      it 'should return 403 if authentication fails' do
-        get '/api/v1/check_authentication', params
-        last_response.status.should == 403
-
-        get '/api/v1/check_authentication', invalid_params
-        last_response.status.should == 403
-      end
-
-      it 'should return normally with a valid authentication' do
-        get '/api/v1/check_authentication', signed_params
-        last_response.status.should == 200
-      end
-    end
 
     describe "exact searches" do
       it 'should do forward searches' do
@@ -202,51 +169,6 @@ describe WadokuSearchAPI do
     end
 
     describe "entries" do
-
-      context 'creation' do
-
-        let!(:client) { User.create(:client_id => "SOME_CLIENT_ID", :client_secret => "SOME_CLIENT_SECRET") }
-        let(:params) do
-          {
-            writing: '賢者タイム',
-            kana: 'けんじゃたいむ',
-            pos: '名',
-            definition: '(<POS: N.>) <MGr: <Def.: Something something>>.'
-          }
-        end
-        let(:signed_params) { sign_request params, client}
-        let(:malformed_entry_params) { h = params.dup; h[:definition] = '>>><<<>>>INVALID'; sign_request h, client}
-
-        it 'should require authentications' do
-          expect(Entry.first(writing: '賢者タイム')).to be_nil
-
-          post '/api/v1/entry', params
-
-          expect(last_response.status).to be 403
-          expect(last_json['error']).to eql "Could not authenticate!"
-          expect(Entry.first(writing: '賢者タイム')).to be_nil
-        end
-
-        it 'should return the created entry' do
-          expect(Entry.first(writing: '賢者タイム')).to be_nil
-
-          post '/api/v1/entry', signed_params
-
-          expect(last_json['entry']).to be
-          expect(Entry.first(writing: '賢者タイム')).to be
-        end
-
-        it 'should reject malformed entries' do
-          expect(Entry.first(writing: '賢者タイム')).to be_nil
-
-          post '/api/v1/entry', malformed_entry_params
-
-          expect(last_response.status).to be 400
-          expect(last_json['error']).to eql 'Could not parse entry, rejecting.'
-          expect(Entry.first(writing: '賢者タイム')).to be_nil
-        end
-      end
-
       it 'should return a representation of an entry when given a valid wadoku id' do
         get '/api/v1/entry/0946913'
         last_json["writing"].should eq "アナクロニズム"
