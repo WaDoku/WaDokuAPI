@@ -2,7 +2,7 @@
 require "bundler"
 
 ROOT_DIR=File.expand_path(File.dirname(__FILE__))
-ENV["RACK_ENV"] ||= "production"
+ENV["RACK_ENV"] ||= "staging"
 
 task :default => "fresh_spec"
 
