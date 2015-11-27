@@ -1,10 +1,8 @@
 # encoding: utf-8
 require "bundler"
-require 'rspec/core/rake_task'
-require 'pry'
 
 ROOT_DIR=File.expand_path(File.dirname(__FILE__))
-ENV["RACK_ENV"] ||= "development"
+ENV["RACK_ENV"] ||= "production"
 
 task :default => "fresh_spec"
 
@@ -68,9 +66,10 @@ end
 
 desc "Fill database, fill index, than run specs"
 task :fresh_spec do
-  ENV["RACK_ENV"] = "test"
+  ENV["RACK_ENV"] = "production"
   task(:fill_db).invoke
   task(:picky_index).invoke
+  task(:create_lemmata).invoke
   task(:spec).invoke
 end
 
