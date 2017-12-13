@@ -3,6 +3,7 @@ require "bundler/capistrano"
 require "capistrano/ext/multistage"
 require "rvm/capistrano"                  # Load RVM's capistrano plugin.
 set :rvm_type, :system  # Copy the exact line. I really mean :system here
+set :normalize_asset_timestamps, false
 
 # set :scm, :git # You can set :scm explicitly or Capistrano will make an intelligent guess based on known version control directory names
 # Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
@@ -12,7 +13,7 @@ set :scm, :git
 set :application, "WadokuAPI"
 set :repository,  "git://github.com/Wadoku/WaDokuAPI.git"
 
-server_ip = "wadoku.eu"
+server_ip = "rokuhara.japanologie.kultur.uni-tuebingen.de"
 
 role :web, server_ip                          # Your HTTP server, Apache/etc
 role :app, server_ip                          # This may be the same as your `Web` server
@@ -29,6 +30,7 @@ set :deploy_via, :remote_cache
 set :user, "deploy"
 set :use_sudo, false
 set :git_enable_submodules, 1
+set :keep_releases, 2
 
 namespace :index do
   task :reindex do
@@ -45,6 +47,10 @@ namespace :deploy do
 
   task :restart, :roles => :app do
     run "touch #{current_path}/tmp/restart.txt"
+  end
+
+  task :fix_ownership, :roles => :app do
+    run "chown -R deploy:www-data #{deploy_to}"
   end
 end
 
@@ -64,5 +70,15 @@ namespace :db_setup do
   end
 end
 
+namespace :rake do
+  desc "Invoke rake task"
+  task :invoke do
+    run "cd #{current_path} && bundle exec rake #{ENV['task']} RAILS_ENV=#{rails_env} --trace"
+  end
+end
+
 after "deploy:update_code", "db_setup:link_shared"
 after "deploy:setup", "db_setup:create_shared"
+after "deploy:update_code", "deploy:fix_ownership"
+after "deploy:update_code", "deploy:cleanup"
+after "rake:invoke", "deploy:fix_ownership"
