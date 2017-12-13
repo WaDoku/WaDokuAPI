@@ -1,13 +1,9 @@
 # encoding: utf-8
 require "bundler"
 
-group :test do
-require 'rspec/core/rake_task'
-end
-
-group :development do
-  require 'pry'
-end
+# not needed for live-system
+#require 'rspec/core/rake_task'
+#require 'pry'
 
 ROOT_DIR=File.expand_path(File.dirname(__FILE__))
 ENV["RACK_ENV"] ||= "production"
