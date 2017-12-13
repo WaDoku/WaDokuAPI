@@ -1,9 +1,9 @@
 # encoding: utf-8
 require "bundler"
 
-# not needed for live-system
-#require 'rspec/core/rake_task'
-#require 'pry'
+#required for travis
+require 'rspec/core/rake_task'
+require 'pry'
 
 ROOT_DIR=File.expand_path(File.dirname(__FILE__))
 ENV["RACK_ENV"] ||= "production"
