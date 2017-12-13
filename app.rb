@@ -1,6 +1,6 @@
 require "bundler"
 
-Bundler.require(:default, :db, :picky, :production)
+Bundler.require(:default, :db, :picky, :development)
 ROOT_DIR=File.expand_path(File.dirname(__FILE__))
 
 require_relative 'app/extensions'

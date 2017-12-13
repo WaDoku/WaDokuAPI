@@ -6,7 +6,7 @@ require 'rspec/core/rake_task'
 require 'pry'
 
 ROOT_DIR=File.expand_path(File.dirname(__FILE__))
-ENV["RACK_ENV"] ||= "production"
+ENV["RACK_ENV"] ||= "development"
 
 task :default => "fresh_spec"
 
@@ -75,7 +75,7 @@ end
 
 desc "Fill database, fill index, than run specs"
 task :fresh_spec do
-  ENV["RACK_ENV"] = "production"
+  ENV["RACK_ENV"] = "test"
   task(:fill_db).invoke
   task(:picky_index).invoke
   task(:spec).invoke

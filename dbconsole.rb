@@ -1,6 +1,6 @@
 require 'bundler'
 
-Bundler.require(:production, :db)
+Bundler.require(:development, :db)
 ROOT_DIR=File.expand_path(File.dirname(__FILE__))
 
 require_relative 'db/config'
