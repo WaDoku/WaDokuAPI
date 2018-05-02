@@ -10,7 +10,7 @@
            :stopwords =>         /\b(and|the|of|it|in|for)\b/i,
            :splits_text_on =>    /[\s;\(\)\[\]]/
 
-  category :writing, weight: Picky::Weights::Logarithmic.new(+3)
+  category :writing, weight: Picky::Weights::Logarithmic.new(+3), partial: Picky::Partial::Infix.new
 end
 
 @japanese_index = Picky::Index.new :japanese do
@@ -28,12 +28,10 @@ end
   indexing :removes_characters => /[^a-zA-Z0-9\s;\(\)\[\]<>]/,
            :stopwords =>         /\b(und|der|ein|die|das|eine)\b/i,
            :splits_text_on =>    /[\s;\(\)\[\]<>]/
-
   category :romaji, weight: Picky::Weights::Logarithmic.new(+2)
-  category :tres, weight: Picky::Weights::Logarithmic.new(+3)
+  category :tres, weight: Picky::Weights::Logarithmic.new(+3), partial: Picky::Partial::Infix.new
   #category :definition
 end
-
 WadokuSearch = Picky::Search.new(@japanese_index, @romaji_index, @writing_index) do
 # How query text is preprocessed. Move to Search block to make it search specific.
 #
