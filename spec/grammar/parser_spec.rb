@@ -429,5 +429,14 @@ describe WadokuGrammar do
     parse = grammar.parse_with_debug(text)
     parse.should_not be_nil
   end
-  
+
+
+  # Reason:
+  # Failed to match sequence (PREAMBLE? (MGR_WITH_A_B{1, } / ANY_MGR{1, }) SPACE? TAGS_WITH_PARENS? SPACE? '.'? SPACE? TAGS_WITH_PARENS? '.'?) at line 1 char 13.
+  it 'should parse a emph- inside a topic-tag <topic <emph>>' do
+    text = '(<POS: N.>) <MGr: {<Dom.: Mus.>} <TrE: <HW fm: Samba>> (<Def.: afro-brasilian. Musikstil und Tanz im 2/4-Takt>；<Expl.: zum Genus: Brasilianisch heißt es <Topic: <Emph.: o> samba>t also maskulin>)>.'
+    parse = grammar.parse_with_debug(text)
+    parse.should_not be_nil
+  end
+
 end

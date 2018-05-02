@@ -73,8 +73,8 @@ class WadokuGrammar < Parslet::Parser
   rule(:literal_content) { hw | text}
 
 # <Topic>
-
-  rule(:topic) {str("<Topic:") >> space? >> non_closing.as(:topic) >> space? >> str(">") }
+  rule(:topic) {str("<Topic:") >> space? >> topic_content.repeat(1) >> space? >> str(">").as(:topic) }
+  rule(:topic_content) { text | emph }
 
 # <Transl>
 
