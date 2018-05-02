@@ -465,4 +465,9 @@ describe WadokuGrammar do
     parse.should_not be_nil
   end
 
+  it 'should parse Entries containing this "➡" type of arrows' do
+    text = '(<POS: N.；Na.-Adj. mit <Transcr.: na> bzw. präd. mit <Transcr.: da> etc.>) [A](<Descr.: als Nomen>) [1]<MGr: <TrE: <HW m: Aktivist>>; <TrE: (<Expl.: führendes>) <HW n: Parteimitglied>>; <TrE: (<Expl.: führendes>) <HW n: Gewerkschaftsmitglied>>>. [2]<MGr: <TrE: <HW f: Aktivität>>; <TrE: <HW f: Aktivierung>>>. [3]<MGr: {<Dom.: Gramm.>} <TrE: <HW n: Aktiv>>>. [B]<MGr: (<Descr.: als Na.-Adj.>) <TrE: aktiv> (<Ref.: ⇔ <Transcr.: passhibu> <Jap.: パッシブ><DaID: 8152886>>)>. (<Etym.: <impli.: aus d. Russ. bzw. Lat.><expli.: von russ. bzw. lat. <For.: aktiv>>>；<Ref.: ➡ <Transcr.: akutibu> <Jap.: アクティブ><DaID: 8448273>>).'
+    parse = grammar.parse_with_debug(text)
+    parse.should_not be_nil
+  end
 end

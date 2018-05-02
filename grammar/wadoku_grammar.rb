@@ -142,7 +142,7 @@ class WadokuGrammar < Parslet::Parser
 #<SeasonW>
 
   rule(:seasonw) {str("<SeasonW.:") >> space? >> non_closing.as(:seasonw) >> space? >> str(">")}
- 
+
 # Tags in parentheses
 
   rule(:tags_with_parens) {(str("(") >> space? >> parens_content.repeat(1) >> space? >> str(")")).as(:tags_with_parens)}
@@ -189,7 +189,7 @@ class WadokuGrammar < Parslet::Parser
 
 # All the markers
 
-  rule(:marker) { 
+  rule(:marker) {
 #(str('Prior_1') | str('JLPT2') | str('Prior_4') | str('GENKI_L14-II') | str('GENKI_K4') | str('GENKI_K22') | str('GENKI_K21') | str('GENKI_L11-II') | str('GENKI_K10') | str('GENKI_K14') | str('GENKI_K18') | str('GENKI_K6') | str('GENKI_L14') | str('GENKI_K3') | str('GENKI_K2') | str('GENKI_K7–s–') | str('GENKI_K5') | str('GENKI_K20') | str('GENKI_K16') | str('GENKI_K1') | str('GENKI_K7') | str('GENKI_L20-II') | str('GENKI_K12') | str('GENKI_L12-II') | str('GENKI_K13') | str('GENKI_K8') | str('GENKI_L23-II') | str('GENKI_L8-II') | str('会G') | str('MiWB') | str('GrWB') | str('SpezWB') | str('GENKI_K9') | str('GENKI_L10-II') | str('GENKI_L19-II') | str('GENKI_L16-II') | str('GENKI_K2–s–') | str('GENKI_K4 _s_') | str('GENKI_K4–s–') | str('GENKI_L21-II') | str('GENKI_L19') | str('GENKI_K19') | str('GENKI_L9') | str('GENKI_L22-II') | str('GENKI_L15-II') | str('GENKI_K17') | str('GENKI_K15') | str('GENKI_K10–s–') | str('GENKI_K11') | str('GENKI_K7 _s_') | str('rsam') | str('GENKI_K23') | str('JWD0512706') | str('JWD0514095') | str('JWD0523511') | str('JWD0034270') | str('JWD0547674') | str('GENKI_K10 _s_') | str('GENKI_K5–s–') | str('GENKI_L17-II') | str('GENKI_K11 _s_') | str('GENKI_K17 _s_') | str('GENKI_L18-II') | str('GENKI_K17–s–') | str('GENKI_K12 _s_') | str('GENKI_K9 _s_') | str('GENKI_K6 _s_') | str('GENKI_K9–s–') | str('GENKI_K13–s–') | str('GENKI_L13-II') | str('GENKI_K5 _s_') | str('GENKI_L19-III') | str('<JLPT2') | str('GENKI_L9-II') | str('GENKI_K1–s–') | str('GENKI_K12–s–') | str('GENKI_L5-II') | str('GENKI_K15–s–') | str('Prior_3') | str('WBGes') | str('GENKI_K15 _s_') | str('JWD0058918') | str('JWD0001109') | str('GENKI_K13 _s_') | str('JWD0216734') | str('GENKI_K1 _s_') | str('GENKI_L18-III') | str('GENKI_L13-III') | str('GENKI_K6–s–') | str('Gen<JLPT2') | str('JWD0304286') | str('JWD0221300') | str('JWD0221299') | str('nonrev') | str('GENKI_L10') | str('GENKI_K11–s–') | str('GENKI_L20') | str('GENKI_L6-III') | str('GENKI_L4-III') | str('GENKI_K2 _s_') | str('Prior_falsch') | str('rev') | str('GENKI_L8') | str('GENKI_L7-II')
 (str("<") >> match("[^\s:>]").repeat(1) >> str(">")).as(:marker) }
 
@@ -209,14 +209,14 @@ class WadokuGrammar < Parslet::Parser
   rule(:space) { match('\s').repeat(1) }
   rule(:space?) { space.maybe }
   rule(:non_closing) { match("[^>:]").repeat(1) }
-  rule(:relation_symbol) { match("[⇔⇒☞→]").as(:relation) }
+  rule(:relation_symbol) { match("[⇔⇒☞→➡]").as(:relation) }
   rule(:relation_symbol?) { relation_symbol.maybe }
   rule(:text) { match("[^<>()]").repeat(1).as(:text) }
   rule(:seperator) { (match("[.；;]") | str("//")).as(:seperator)}
   rule(:number) { (str("[") >> match('[\d]').repeat(1) >> str("]")).as(:number)}
   rule(:wrong_number) {( str("[") >> match("[^\\]]").repeat(2) >> str("]")).as(:wrong_number)}
   rule(:thing) {match('[A-Z]').repeat(1).as(:thing)}
-  
-  
+
+
   root(:full_entry)
 end
