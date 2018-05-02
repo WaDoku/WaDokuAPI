@@ -37,7 +37,7 @@ end
 WadokuSearch = Picky::Search.new(@japanese_index, @romaji_index, @writing_index) do
 # How query text is preprocessed. Move to Search block to make it search specific.
 #
-  searching removes_characters: /[^\p{Han}\p{Katakana}\p{Hiragana}a-zA-Z0-9\s\/\-\_\&\.\"\~\*\:\,]/i, # Picky needs control chars *"~:, to pass through.
+  searching removes_characters: /[^\p{Han}\p{Katakana}\p{Hiragana}a-zA-Z0-9\s\/\-\\ー\_\&\.\"\~\*\:\,]/i, # Picky needs control chars *"~:, to pass through.
             stopwords:          /\b(and|the|of|it|in|for)\b/i,
             splits_text_on:     /[\s\/\-\&]+/
 end
