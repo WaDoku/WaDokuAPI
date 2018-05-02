@@ -24,8 +24,10 @@ class JsonEntry
       elsif format == "plain" && @entry.definition_plain
         definition = @entry.definition_plain
       else
-        parsed = @@grammar.parse @entry.definition
-        definition = transformer.apply parsed
+        definition = "<div style='color:red;'> BROKEN SYNTAX STYLE RULES</div> "
+        definition.concat "</br><div style='color:green;'>wadoku_id: #{@entry.wadoku_id}"
+        definition.concat "</br><div style='color:grey;'>definition: #{@entry.definition.gsub(/[<>(){}]/, '')}"
+        definition
       end
 
       res = {
