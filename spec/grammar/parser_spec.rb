@@ -447,4 +447,22 @@ describe WadokuGrammar do
     parse = grammar.parse_with_debug(text)
     parse.should_not be_nil
   end
+
+  # Reason:
+  # Failed to match sequence (PREAMBLE? (MGR_WITH_A_B{1, } / ANY_MGR{1, }) SPACE? TAGS_WITH_PARENS? SPACE? '.'? SPACE? TAGS_WITH_PARENS? '.'?) at line 1 char 1.
+  it 'should parse <WikiDE, WikiJA & WaDokuDE Tags' do
+    text = '<MGr: {<Dom.: Biol.>} <TrE: <HW f: Bioethik>> (<WikiJA: 生命倫理学>；<WikiDE: Bioethik>；<WaDokuDE: 10059767>)>.'
+    parse = grammar.parse_with_debug(text)
+    parse.should_not be_nil
+  end
+
+
+  # Reason:
+  # Failed to match sequence (PREAMBLE? (MGR_WITH_A_B{1, } / ANY_MGR{1, }) SPACE? TAGS_WITH_PARENS? SPACE? '.'? SPACE? TAGS_WITH_PARENS? '.'?) at line 1 char 1.
+  it 'should parse this' do
+    text = '<MGr: {<Dom.: Persönlichk.>} <TrE: <FamN.: Fujiwara> no Saneyori> (<Def.: Höfling in der Mitte der Heian-Zeit>；<BirthDeath: 900–970>；<WikiJA: 藤原実頼>；<WikiDE: Fujiwara_no_Saneyori>；<WaDokuDE UNGEP: 10041468>)>.'
+    parse = grammar.parse_with_debug(text)
+    parse.should_not be_nil
+  end
+
 end

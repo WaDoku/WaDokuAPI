@@ -6,7 +6,7 @@ class WadokuGrammar < Parslet::Parser
 # (POS)
   #rule(:pos) { (str("(<POS:") >> space? >> match('[^,>]').repeat(1).as(:main_pos) >> secondary_pos? >> str(">)")).as(:pos)}
   rule(:pos) {(str("(<POS:") >> space? >> pos_content.repeat(1) >> space? >> str(">)")).as(:pos)}
-  rule(:pos_content) { text | transcr | expl | space } 
+  rule(:pos_content) { text | transcr | expl | space }
   #rule(:secondary_pos){(str(",") >> space? >> pos_content.repeat(1) >> space?).as(:secondary_pos)}
   #rule(:secondary_pos?) {secondary_pos.maybe}
   rule(:pos?) { pos.maybe }
@@ -147,13 +147,17 @@ class WadokuGrammar < Parslet::Parser
 
   rule(:tags_with_parens) {(str("(") >> space? >> parens_content.repeat(1) >> space? >> str(")")).as(:tags_with_parens)}
 
-  rule(:parens_content) { kimulem | dij | usage | defi | expl | pict | audio | ref | descr | seperator | space | etym | birthdeath | langniv | scientif | seasonw | date | steinhaus | url | jwd | wiki }
+  rule(:parens_content) { kimulem | dij | usage | defi | expl | pict | audio | ref | descr | seperator | space | etym | birthdeath | langniv | scientif | seasonw | date | steinhaus | url | jwd | wiki | wiki_ja | wiki_de | wadoku_de }
 
   rule(:tags_with_parens?) { tags_with_parens.maybe}
 
 # Wikilinks
 
   rule(:wiki) {(str("<Wiki") >> match(".").repeat(2,2).as(:lang) >> space? >> str(":") >> space? >> non_closing.as(:keyword) >> space? >> str(">")).as(:wiki)}
+  rule(:wiki_ja) {str("<WikiJA:") >> space? >> non_closing.as(:wiki_ja) >> space? >> str(">")}
+  rule(:wiki_de) {str("<WikiDE:") >> space? >> non_closing.as(:wiki_de) >> space? >> str(">")}
+  rule(:wadoku_de) { (str("<WaDokuDE") >> space? >> non_closing.maybe.as(:wadoku_type) >> space? >> str(":") >> space? >> title_content.repeat(1) >> space? >> str(">")).as(:wadoku_de) }
+
 
 # <iron.>
   rule(:iron) { (str("<iron.:") >> space? >> iron_content.repeat(1) >> space? >> str(">")).as(:iron) }
