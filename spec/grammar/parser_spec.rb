@@ -439,4 +439,12 @@ describe WadokuGrammar do
     parse.should_not be_nil
   end
 
+
+  # Reason:
+  # Failed to match sequence (PREAMBLE? (MGR_WITH_A_B{1, } / ANY_MGR{1, }) SPACE? TAGS_WITH_PARENS? SPACE? '.'? SPACE? TAGS_WITH_PARENS? '.'?) at line 1 char 13.
+  it 'should parse this' do
+    text = '(<POS: N.>) [1]<MGr: <TrE: (<Expl.: das Zeichen>) „<Topic: <HW n: a>>“> (<Expl.: erster Buchstabe im sanskrit. Alphabet>)>. [2]<MGr: <TrE: <HW m: Anfang>>; <TrE: <HW f: Ursprung>>; <TrE: <HW f: Quelle>>>. [3]<MGr: {<Dom.: Buddh.>} <TrE: <Def.: <HW n: Symbol> für den Urgrund aller Dinge im esoterischen Buddhismus>>>.'
+    parse = grammar.parse_with_debug(text)
+    parse.should_not be_nil
+  end
 end
