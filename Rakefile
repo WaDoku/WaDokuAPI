@@ -168,11 +168,11 @@ task :fill_db do
         end
 
         entry = Entry.create(:wadoku_id => entry_txt[0],
-                     :writing => entry_txt[1], 
-                     :kana => entry_txt[2] , 
-                     :definition => entry_txt[3], 
-                     :definition_html => definition_html, 
-                     :definition_plain => definition_plain, 
+                     :writing => entry_txt[1],
+                     :kana => entry_txt[2] ,
+                     :definition => entry_txt[3],
+                     :definition_html => definition_html,
+                     :definition_plain => definition_plain,
                      :audio_url => audio_url,
                      :picture_url => picture_url,
                      :picture_caption => picture_caption,
@@ -198,6 +198,7 @@ task :picky_index do
   Bundler.require(:db, :picky)
 
   require_relative 'app/models/entry'
+  require_relative 'app/models/lemma'
   require_relative 'picky/indexes.rb'
   require_relative 'db/config'
 
