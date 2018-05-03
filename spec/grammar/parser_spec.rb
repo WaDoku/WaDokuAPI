@@ -429,5 +429,44 @@ describe WadokuGrammar do
     parse = grammar.parse_with_debug(text)
     parse.should_not be_nil
   end
-  
+
+
+  # Reason:
+  # Failed to match sequence (PREAMBLE? (MGR_WITH_A_B{1, } / ANY_MGR{1, }) SPACE? TAGS_WITH_PARENS? SPACE? '.'? SPACE? TAGS_WITH_PARENS? '.'?) at line 1 char 13.
+  it 'should parse a emph- inside a topic-tag <topic <emph>>' do
+    text = '(<POS: N.>) <MGr: {<Dom.: Mus.>} <TrE: <HW fm: Samba>> (<Def.: afro-brasilian. Musikstil und Tanz im 2/4-Takt>；<Expl.: zum Genus: Brasilianisch heißt es <Topic: <Emph.: o> samba>t also maskulin>)>.'
+    parse = grammar.parse_with_debug(text)
+    parse.should_not be_nil
+  end
+
+
+  # Reason:
+  # Failed to match sequence (PREAMBLE? (MGR_WITH_A_B{1, } / ANY_MGR{1, }) SPACE? TAGS_WITH_PARENS? SPACE? '.'? SPACE? TAGS_WITH_PARENS? '.'?) at line 1 char 13.
+  it 'should parse this' do
+    text = '(<POS: N.>) [1]<MGr: <TrE: (<Expl.: das Zeichen>) „<Topic: <HW n: a>>“> (<Expl.: erster Buchstabe im sanskrit. Alphabet>)>. [2]<MGr: <TrE: <HW m: Anfang>>; <TrE: <HW f: Ursprung>>; <TrE: <HW f: Quelle>>>. [3]<MGr: {<Dom.: Buddh.>} <TrE: <Def.: <HW n: Symbol> für den Urgrund aller Dinge im esoterischen Buddhismus>>>.'
+    parse = grammar.parse_with_debug(text)
+    parse.should_not be_nil
+  end
+
+  # Reason:
+  # Failed to match sequence (PREAMBLE? (MGR_WITH_A_B{1, } / ANY_MGR{1, }) SPACE? TAGS_WITH_PARENS? SPACE? '.'? SPACE? TAGS_WITH_PARENS? '.'?) at line 1 char 1.
+  it 'should parse Entries containing WaDokuDE Tags' do
+    text = '<MGr: {<Dom.: Biol.>} <TrE: <HW f: Bioethik>> (<WikiJA: 生命倫理学>；<WikiDE: Bioethik>；<WaDokuDE: 10059767>)>.'
+    parse = grammar.parse_with_debug(text)
+    parse.should_not be_nil
+  end
+
+  # Reason:
+  # Failed to match sequence (PREAMBLE? (MGR_WITH_A_B{1, } / ANY_MGR{1, }) SPACE? TAGS_WITH_PARENS? SPACE? '.'? SPACE? TAGS_WITH_PARENS? '.'?) at line 1 char 1.
+  it 'should parse this' do
+    text = '<MGr: {<Dom.: Persönlichk.>} <TrE: <FamN.: Fujiwara> no Saneyori> (<Def.: Höfling in der Mitte der Heian-Zeit>；<BirthDeath: 900–970>；<WikiJA: 藤原実頼>；<WikiDE: Fujiwara_no_Saneyori>；<WaDokuDE UNGEP: 10041468>)>.'
+    parse = grammar.parse_with_debug(text)
+    parse.should_not be_nil
+  end
+
+  it 'should parse Entries containing this "➡" type of arrows' do
+    text = '(<POS: N.；Na.-Adj. mit <Transcr.: na> bzw. präd. mit <Transcr.: da> etc.>) [A](<Descr.: als Nomen>) [1]<MGr: <TrE: <HW m: Aktivist>>; <TrE: (<Expl.: führendes>) <HW n: Parteimitglied>>; <TrE: (<Expl.: führendes>) <HW n: Gewerkschaftsmitglied>>>. [2]<MGr: <TrE: <HW f: Aktivität>>; <TrE: <HW f: Aktivierung>>>. [3]<MGr: {<Dom.: Gramm.>} <TrE: <HW n: Aktiv>>>. [B]<MGr: (<Descr.: als Na.-Adj.>) <TrE: aktiv> (<Ref.: ⇔ <Transcr.: passhibu> <Jap.: パッシブ><DaID: 8152886>>)>. (<Etym.: <impli.: aus d. Russ. bzw. Lat.><expli.: von russ. bzw. lat. <For.: aktiv>>>；<Ref.: ➡ <Transcr.: akutibu> <Jap.: アクティブ><DaID: 8448273>>).'
+    parse = grammar.parse_with_debug(text)
+    parse.should_not be_nil
+  end
 end

@@ -17,7 +17,7 @@ class Results
     results = @entries.map{|entry| JsonEntry.new(entry).to_hash(@options)}
 
     # Don't give out errored entries.
-    results = results.reject {|entry| entry[:error]}
+    #results = results.reject {|entry| entry[:error]}
 
     res = {
       total: @total,
@@ -41,7 +41,7 @@ class Results
     case @options['mode']
     when 'fuzzy'
       search = WadokuSearch.search(@options['query'], @options['limit'], @options['offset'])
-      @total = search.total
+      @total = search.ids.uniq.size
       @entries = Entry.all(id: search.ids)
     when 'forward'
       @entries = Lemma.all(:content.like => @options['query'] + "%").map(&:entry)
