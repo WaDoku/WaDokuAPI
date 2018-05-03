@@ -147,15 +147,36 @@ class WadokuGrammar < Parslet::Parser
 
   rule(:tags_with_parens) {(str("(") >> space? >> parens_content.repeat(1) >> space? >> str(")")).as(:tags_with_parens)}
 
-  rule(:parens_content) { kimulem | dij | usage | defi | expl | pict | audio | ref | descr | seperator | space | etym | birthdeath | langniv | scientif | seasonw | date | steinhaus | url | jwd | wiki | wiki_ja | wiki_de | wadoku_de }
+  rule(:parens_content) {
+                          kimulem |
+                          dij |
+                          usage |
+                          defi |
+                          expl |
+                          pict |
+                          audio |
+                          ref |
+                          descr |
+                          seperator |
+                          space |
+                          etym |
+                          birthdeath |
+                          langniv |
+                          scientif |
+                          seasonw |
+                          date |
+                          steinhaus |
+                          url |
+                          jwd |
+                          wiki |
+                          wadoku_de
+                        }
 
   rule(:tags_with_parens?) { tags_with_parens.maybe}
 
 # Wikilinks
 
   rule(:wiki) {(str("<Wiki") >> match(".").repeat(2,2).as(:lang) >> space? >> str(":") >> space? >> non_closing.as(:keyword) >> space? >> str(">")).as(:wiki)}
-  rule(:wiki_ja) {str("<WikiJA:") >> space? >> non_closing.as(:wiki_ja) >> space? >> str(">")}
-  rule(:wiki_de) {str("<WikiDE:") >> space? >> non_closing.as(:wiki_de) >> space? >> str(">")}
   rule(:wadoku_de) { (str("<WaDokuDE") >> space? >> non_closing.maybe.as(:wadoku_type) >> space? >> str(":") >> space? >> title_content.repeat(1) >> space? >> str(">")).as(:wadoku_de) }
 
 
