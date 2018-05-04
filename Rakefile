@@ -76,7 +76,7 @@ desc "Fill database, fill index, than run specs"
 task :fresh_spec do
   task(:fill_db).invoke
   task(:picky_index).invoke
-  #task(:spec).invoke
+  task(:spec).invoke
 end
 
 def tab_file
