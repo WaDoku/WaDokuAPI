@@ -1,7 +1,7 @@
 source 'https://rubygems.org/'
 
 gem "rake"
-
+gem 'pry'
 gem "sinatra", :require => "sinatra/base"
 gem "yajl-ruby", :require => 'yajl'
 
@@ -31,8 +31,4 @@ group :test do
   gem "rack-test", require: "rack/test"
   gem 'database_cleaner'
   gem 'dm-transactions'
-end
-
-group :development, :test do
-  gem 'pry'
 end
