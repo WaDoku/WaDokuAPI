@@ -27,6 +27,7 @@ options[:pty] = true
 ssh_options[:forward_agent] = true
 default_run_options[:pty] = true
 set :deploy_via, :remote_cache
+set :copy_exclude, [ '.git' ]
 set :user, "deploy"
 set :use_sudo, false
 set :git_enable_submodules, 1
