@@ -9,6 +9,9 @@ gem 'parslet'
 
 group :development do
   gem "pry"
+  gem 'capistrano', '2.15.9'
+  gem 'net-ssh', '2.9.4'
+  gem 'rvm-capistrano'
 end
 
 group :picky do

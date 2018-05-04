@@ -9,6 +9,12 @@ GEM
     bcrypt-ruby (3.1.5)
       bcrypt (>= 3.1.3)
     blankslate (2.1.2.4)
+    capistrano (2.15.9)
+      highline
+      net-scp (>= 1.0.0)
+      net-sftp (>= 2.0.0)
+      net-ssh (>= 2.0.14)
+      net-ssh-gateway (>= 1.1.0)
     coderay (1.1.2)
     concurrent-ruby (1.0.5)
     data_mapper (1.2.0)
@@ -67,12 +73,20 @@ GEM
     do_sqlite3 (0.10.17)
       data_objects (= 0.10.17)
     fastercsv (1.5.5)
+    highline (1.7.10)
     i18n (0.9.1)
       concurrent-ruby (~> 1.0)
     json (1.8.6)
     json_pure (1.7.7)
     method_source (0.9.0)
     multi_json (1.12.2)
+    net-scp (1.2.1)
+      net-ssh (>= 2.6.5)
+    net-sftp (2.1.2)
+      net-ssh (>= 2.6.5)
+    net-ssh (2.9.4)
+    net-ssh-gateway (1.3.0)
+      net-ssh (>= 2.6.5)
     parslet (1.7.1)
       blankslate (>= 2.0, <= 4.0)
     picky (4.23.2)
@@ -102,6 +116,8 @@ GEM
     rspec-expectations (2.11.3)
       diff-lcs (~> 1.1.3)
     rspec-mocks (2.11.3)
+    rvm-capistrano (1.5.6)
+      capistrano (~> 2.15.4)
     sinatra (1.4.8)
       rack (~> 1.5)
       rack-protection (~> 1.4)
@@ -118,12 +134,14 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  capistrano (= 2.15.9)
   data_mapper
   database_cleaner
   dm-chunked_query
   dm-is-versioned
   dm-sqlite-adapter
   dm-transactions
+  net-ssh (= 2.9.4)
   parslet
   picky
   procrastinate
@@ -132,6 +150,7 @@ DEPENDENCIES
   rake
   romkan
   rspec
+  rvm-capistrano
   sinatra
   yajl-ruby
 
