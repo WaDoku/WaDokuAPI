@@ -134,7 +134,7 @@ describe WadokuSearchAPI do
     describe "searches" do
       it 'should give a total amount of results' do
         get '/api/v1/search?query=japan'
-        last_json["total"].should == 3
+        expect(last_json['total'].is_a?(Integer)).to eq(true)
       end
 
       it 'should return 30 entries by default' do
@@ -144,10 +144,10 @@ describe WadokuSearchAPI do
 
       it 'should return the amount of entries given in the limit option' do
         get '/api/v1/search?query=japan&limit=15'
-        (last_json['entries'].count <= 15).should be_true
+        expect(last_json['entries'].count <= 15).to eq(true)
 
         get '/api/v1/search?query=japan&limit=60'
-        (last_json['entries'].count <= 60).should be_true # 57 because some entries dont parse.
+        expect(last_json['entries'].count <= 60).to eq(true) # 57 because some entries dont parse.
       end
 
       it 'should not contain errored entries' do

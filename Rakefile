@@ -6,7 +6,6 @@ require 'rspec/core/rake_task'
 require 'pry'
 
 ROOT_DIR=File.expand_path(File.dirname(__FILE__))
-ENV["RACK_ENV"] ||= "development"
 
 task :default => "fresh_spec"
 
@@ -75,7 +74,6 @@ end
 
 desc "Fill database, fill index, than run specs"
 task :fresh_spec do
-  ENV["RACK_ENV"] = "test"
   task(:fill_db).invoke
   task(:picky_index).invoke
   task(:spec).invoke
@@ -84,6 +82,7 @@ end
 def tab_file
   case ENV['RACK_ENV']
     when 'production' then File.join(ROOT_DIR, "WaDokuJT-Data","WaDokuDa.tab")
+    when 'staging' then File.join(ROOT_DIR, "WaDokuJT-Data","WaDokuDa.tab")
     when 'development' then File.join(ROOT_DIR, "WaDokuJT-Data","WaDokuDa.tab")
     when 'test' then File.join(ROOT_DIR, "WaDokuJT-Data","WaDokuTest.tab")
   end
@@ -172,11 +171,11 @@ task :fill_db do
         end
 
         entry = Entry.create(:wadoku_id => entry_txt[0],
-                     :writing => entry_txt[1], 
-                     :kana => entry_txt[2] , 
-                     :definition => entry_txt[3], 
-                     :definition_html => definition_html, 
-                     :definition_plain => definition_plain, 
+                     :writing => entry_txt[1],
+                     :kana => entry_txt[2] ,
+                     :definition => entry_txt[3],
+                     :definition_html => definition_html,
+                     :definition_plain => definition_plain,
                      :audio_url => audio_url,
                      :picture_url => picture_url,
                      :picture_caption => picture_caption,
@@ -202,6 +201,7 @@ task :picky_index do
   Bundler.require(:db, :picky)
 
   require_relative 'app/models/entry'
+  require_relative 'app/models/lemma'
   require_relative 'picky/indexes.rb'
   require_relative 'db/config'
 
