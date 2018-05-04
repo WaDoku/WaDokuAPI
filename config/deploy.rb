@@ -76,6 +76,10 @@ namespace :rake do
   task :invoke do
     run "cd #{current_path} && bundle exec rake #{ENV['task']} RAILS_ENV=#{rails_env} --trace"
   end
+  task :db_index do
+    run "cd #{current_path} && bundle exec rake fill_db RAILS_ENV=#{rails_env} --trace"
+    run "cd #{current_path} && bundle exec rake picky_index  RAILS_ENV=#{rails_env} --trace"
+  end
 end
 
 after "deploy:update_code", "db_setup:link_shared"
