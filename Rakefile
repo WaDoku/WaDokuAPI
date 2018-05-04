@@ -2,8 +2,10 @@
 require "bundler"
 
 #required for travis
-require 'rspec/core/rake_task'
-require 'pry'
+if ENV['RACK_ENV'] == 'test'
+  require 'rspec/core/rake_task'
+  require 'pry'
+end
 
 ROOT_DIR=File.expand_path(File.dirname(__FILE__))
 
