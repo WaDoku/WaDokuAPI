@@ -56,10 +56,10 @@ end
 
 namespace :db_setup do
   task :create_shared, :roles => :app do
-    run "mkdir -p #{deploy_to}/#{shared_dir}/db/"
-    run "chmod 1777 #{deploy_to}/#{shared_dir}/db/"
-    run "mkdir -p #{deploy_to}/#{shared_dir}/index/"
-    run "chmod -R 1777 #{deploy_to}/#{shared_dir}/index/"
+    run "mkdir -p #{shared_path}/db/"
+    run "chmod 1777 #{shared_path}/db/"
+    run "mkdir -p #{shared_path}/index/"
+    run "chmod -R 1777 #{shared_path}/index/"
   end
 
   task :link_shared do
