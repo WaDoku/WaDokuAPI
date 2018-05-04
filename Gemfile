@@ -8,14 +8,13 @@ gem "yajl-ruby", :require => 'yajl'
 gem 'parslet'
 
 group :development do
-  gem "pry"
   gem 'capistrano', '2.15.9'
   gem 'net-ssh', '2.9.4'
   gem 'rvm-capistrano'
 end
 
 group :picky do
-  gem "picky"
+  gem 'picky'
   gem 'procrastinate'
 end
 
@@ -32,4 +31,8 @@ group :test do
   gem "rack-test", require: "rack/test"
   gem 'database_cleaner'
   gem 'dm-transactions'
+end
+
+group :development, :test do
+  gem 'pry'
 end
