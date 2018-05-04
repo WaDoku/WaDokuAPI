@@ -208,7 +208,6 @@ task :picky_index do
   require_relative 'picky/indexes.rb'
   require_relative 'db/config'
 
-
   puts "Indexing... This might take a while..."
   Picky::Indexes.index
 end

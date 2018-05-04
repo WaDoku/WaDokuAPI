@@ -35,7 +35,7 @@ set :keep_releases, 2
 
 namespace :index do
   task :reindex do
-    run "cd #{current_path} && bundle exec ruby index.rb"
+    run "cd #{current_path} && bundle exec ruby ./picky/indexes.rb"
   end
 end
 
@@ -75,10 +75,6 @@ namespace :rake do
   desc "Invoke rake task"
   task :invoke do
     run "cd #{current_path} && bundle exec rake #{ENV['task']} RAILS_ENV=#{rails_env} --trace"
-  end
-  task :db_index do
-    run "cd #{current_path} && bundle exec rake fill_db RAILS_ENV=#{rails_env} --trace"
-    run "cd #{current_path} && bundle exec rake picky_index  RAILS_ENV=#{rails_env} --trace"
   end
 end
 
