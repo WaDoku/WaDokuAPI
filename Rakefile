@@ -8,7 +8,7 @@ if ENV['RACK_ENV'] == 'test'
 end
 
 ROOT_DIR=File.expand_path(File.dirname(__FILE__))
-ENV["RACK_ENV"] ||= "development"
+ENV["RACK_ENV"] ||= "staging"
 
 task :default => "fresh_spec"
 
@@ -86,7 +86,7 @@ def tab_file
   case ENV['RACK_ENV']
     when 'production' then File.join(ROOT_DIR, "WaDokuJT-Data","WaDokuDa.tab")
     when 'staging' then File.join(ROOT_DIR, "WaDokuJT-Data","WaDokuDa.tab")
-    when 'development' then File.join(ROOT_DIR, "WaDokuJT-Data","WaDokuTest.tab")
+    when 'development' then File.join(ROOT_DIR, "WaDokuJT-Data","WaDokuDa.tab")
     when 'test' then File.join(ROOT_DIR, "WaDokuJT-Data","WaDokuTest.tab")
   end
 end
