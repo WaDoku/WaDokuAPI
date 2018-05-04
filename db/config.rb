@@ -1,6 +1,7 @@
 def database_file
   case ENV['RACK_ENV']
     when 'production' then 'wdk_db'
+    when 'staging' then 'wdk_db'
     when 'development' then 'wdk_db'
     when 'test' then 'wdk_db_test'
     else 'wdk_db'
