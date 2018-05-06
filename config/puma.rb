@@ -6,4 +6,3 @@ preload_app!
 
 state_path '/var/www/staging/wadoku_api/current/tmp/pids/puma.state'
 pidfile '/var/www/staging/wadoku_api/current/tmp/pids/puma.pid'
-activate_control_app 'unix:///var/run/wadoku_api_staging_pumactl.sock'
