@@ -3,6 +3,10 @@ require "bundler"
 Bundler.require(:default, :db, :picky)
 ROOT_DIR=File.expand_path(File.dirname(__FILE__))
 
+# We always use puma as server
+require 'sinatra'
+configure { set :server, :puma }
+
 require_relative 'app/extensions'
 
 require_relative 'grammar/wadoku_grammar'
@@ -25,4 +29,4 @@ require_relative "picky/indexes"
 Picky::Indexes.load
 
 require_relative "app/api"
-#require_relative "app/helpers/helpers"
+require_relative "app/helpers/helpers"

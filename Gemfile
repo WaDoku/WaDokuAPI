@@ -32,3 +32,6 @@ group :test do
   gem 'database_cleaner'
   gem 'dm-transactions'
 end
+
+# Added at 2018-05-06 21:06:14 +0200 by toni:
+gem "puma", "~> 3.11"
