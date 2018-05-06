@@ -175,7 +175,7 @@ task :fill_db do
 
         entry = Entry.create(:wadoku_id => entry_txt[0],
                      :writing => entry_txt[1],
-                     :kana => entry_txt[2] ,
+                     :kana => entry_txt[2],
                      :definition => entry_txt[3],
                      :definition_html => definition_html,
                      :definition_plain => definition_plain,
