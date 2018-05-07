@@ -36,6 +36,7 @@ task :find_non_parsing do
   Bundler.require(:db)
   require 'parslet'
   require_relative 'grammar/wadoku_grammar'
+  require_relative 'app/models/lemma'
 
   SOURCE_FILE = ENV["WADOKU_SOURCE"] || tab_file
 
