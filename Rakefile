@@ -65,7 +65,7 @@ task :find_non_parsing do
   it 'should parse this' do
     text = '#{non_parsing.definition}'
     parse = grammar.parse_with_debug(text)
-    parse.should_not be_nil
+    expect(parse).not_to be_nil
   end
   """
   puts "Found, adding this to spec/grammar/parser_spec.rb:"
