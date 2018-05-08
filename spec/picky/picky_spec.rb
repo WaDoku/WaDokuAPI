@@ -1,8 +1,14 @@
 require 'spec_helper'
 
 describe WadokuSearch do
+  describe 'searching' do
+    it 'finds entries containing katakana long-vowel-marks' do
+      res = WadokuSearch.search('アーヴィング', 30, 0)
+      expect(res.count).to eq(1)
+    end
+  end
 
-  describe "sorting" do
+  describe 'sorting' do
     it 'should favor hits in tres' do
       entries = [
         Entry.get(112), # 相… [1]
@@ -15,11 +21,10 @@ describe WadokuSearch do
           index.replace entry
         end
       end
-      res = WadokuSearch.search("japan", 30, 0)
-      res.ids[0].should == 9999
+      res = WadokuSearch.search('japan', 30, 0)
+      expect(res.ids[0]).to eq(9999)
     end
   end
-
 end
 
 describe Entry do
