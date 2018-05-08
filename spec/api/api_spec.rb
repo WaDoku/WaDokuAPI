@@ -2,13 +2,13 @@
 require 'spec_helper'
 
 describe Entry do
-  it 'should be versioned' do
+  it 'is versioned' do
     new_entry = Entry.create(:writing => "Something")
-    new_entry.versions.count.should == 0
+    expect(new_entry.versions.count).to eq(0)
     new_entry.writing = "Something else"
     DataMapper.finalize # Workaround for some DataMapper bug.
     new_entry.save
-    new_entry.versions.count.should == 1
+    expect(new_entry.versions.count).to eq(1)
     new_entry.destroy
   end
 end
@@ -24,45 +24,45 @@ describe WadokuSearchAPI do
   end
 
   describe JsonEntry do
-    it 'should have a picture property iff one is present in the entry' do
+    it 'has a picture property iff one is present in the entry' do
       hash = JsonEntry.new(Entry.get(13)).to_hash
-      hash[:picture].should_not be_nil
+      expect(hash[:picture]).not_to be_nil
       hash = JsonEntry.new(Entry.get(1)).to_hash
-      hash[:picture].should be_nil
+      expect(hash[:picture]).to be_nil
     end
 
-    it 'should add a subentry midashigo if appropriate' do
+    it 'adds a subentry midashigo if appropriate' do
       hash = JsonEntry.new(Entry.get(7)).to_hash
-      hash[:subentry_midashigo].should eq "~男"
+      expect(hash[:subentry_midashigo]).to eq "~男"
     end
 
-    it 'should have an audio property iff one is present in the entry' do
+    it 'has an audio property iff one is present in the entry' do
       hash = JsonEntry.new(Entry.get(4)).to_hash
-      hash[:audio].should_not be_nil
+      expect(hash[:audio]).not_to be_nil
       hash = JsonEntry.new(Entry.get(3)).to_hash
-      hash[:audio].should be_nil
+      expect(hash[:audio]).to be_nil
     end
 
-    it 'should contain a field with subentries' do
+    it 'contains a field with subentries' do
       hash = JsonEntry.new(Entry.get(22)).to_hash
-      hash[:sub_entries].should_not be_empty
+      expect(hash[:sub_entries]).not_to be_empty
 
       hash = JsonEntry.new(Entry.get(1)).to_hash
-      hash[:sub_entries].should be_empty
+      expect(hash[:sub_entries]).to be_empty
     end
 
-    it 'should have an option to enable full subentries' do
+    it 'has an option to enable full subentries' do
       hash = JsonEntry.new(Entry.get(8772)).to_hash
-      hash[:sub_entries].first[:entries].first[:wadoku_id].should_not be_nil
-      hash[:sub_entries].first[:entries].first[:midashigo].should be_nil
+      expect(hash[:sub_entries].first[:entries].first[:wadoku_id]).not_to be_nil
+      expect(hash[:sub_entries].first[:entries].first[:midashigo]).to be_nil
 
       hash = JsonEntry.new(Entry.get(8772)).to_hash({'full_subentries' => true})
-      hash[:sub_entries].first[:entries].first[:midashigo].should_not be_nil
+      expect(hash[:sub_entries].first[:entries].first[:midashigo]).not_to be_nil
     end
 
-    it 'should group subentries' do
+    it 'groups subentries' do
       hash = JsonEntry.new(Entry.get(8772)).to_hash
-      hash[:sub_entries].size.should be 3
+      expect(hash[:sub_entries].size).to be 3
     end
   end
 
@@ -75,74 +75,74 @@ describe WadokuSearchAPI do
       let!(:signed_params) { sign_request params, client }
       let!(:invalid_params) { i = signed_params.dup; i[:signature] = 'INVALID'; i}
 
-      it 'should return 403 if authentication fails' do
+      it 'returns 403 if authentication fails' do
         get '/api/v1/check_authentication', params
-        last_response.status.should == 403
+        expect(last_response.status).to eq(403)
 
         get '/api/v1/check_authentication', invalid_params
-        last_response.status.should == 403
+        expect(last_response.status).to eq(403)
       end
 
-      it 'should return normally with a valid authentication' do
+      it 'returns normally with a valid authentication' do
         get '/api/v1/check_authentication', signed_params
-        last_response.status.should == 200
+        expect(last_response.status).to eq(200)
       end
     end
 
     describe "exact searches" do
-      it 'should do forward searches' do
+      it 'does forward searches' do
         get "/api/v1/search", {query: 'ああ', mode: 'forward'}
-        last_json["total"].should be 13
+        expect(last_json["total"]).to be 13
       end
 
-      it 'should do backward searches' do
+      it 'does backward searches' do
         get "/api/v1/search", {query: 'と', mode: 'backward'}
-        last_json["total"].should be 33
+        expect(last_json["total"]).to be 33
       end
     end
 
     describe "suggestions" do
-      it 'should return suggestions for partial keywords' do
+      it 'returns suggestions for partial keywords' do
         get "/api/v1/suggestions", {query: 'ああ'}
-        last_json["suggestions"].count.should be 12
+        expect(last_json["suggestions"].count).to be 12
       end
     end
 
     describe "direct Picky" do
-      it 'should answer direct picky queries' do
+      it 'answers direct picky queries' do
         get "/api/v1/picky?query=japan"
-        last_json["total"].should_not be_nil
+        expect(last_json["total"]).not_to be_nil
       end
     end
 
     describe "parsing" do
-      it 'should return a JSON object for valid markup' do
+      it 'returns a JSON object for valid markup' do
         entry = Entry.get 5372
         get '/api/v1/parse', {markup: entry.definition}
-        last_json['error'].should be_nil
+        expect(last_json['error']).to be_nil
       end
 
-      it 'should return an error for invalid markup' do
+      it 'returns an error for invalid markup' do
         markup = '''
           <<<>ALL WRONG
         '''
         get '/api/v1/parse', {markup: markup}
-        last_json['error'].should_not be_nil
+        expect(last_json['error']).not_to be_nil
       end
     end
 
     describe "searches" do
-      it 'should give a total amount of results' do
+      it 'gives a total amount of results' do
         get '/api/v1/search?query=japan'
         expect(last_json['total'].is_a?(Integer)).to eq(true)
       end
 
-      it 'should return 30 entries by default' do
+      it 'returns 30 entries by default' do
         get '/api/v1/search', {query: 'あ'}
-        last_json["entries"].count.should <= 30 # 29 because one entry doesn't parse
+        expect(last_json["entries"].count).to be <= 30 # 29 because one entry doesn't parse
       end
 
-      it 'should return the amount of entries given in the limit option' do
+      it 'returns the amount of entries given in the limit option' do
         get '/api/v1/search?query=japan&limit=15'
         expect(last_json['entries'].count <= 15).to eq(true)
 
@@ -150,29 +150,29 @@ describe WadokuSearchAPI do
         expect(last_json['entries'].count <= 60).to eq(true) # 57 because some entries dont parse.
       end
 
-      it 'should not contain errored entries' do
+      it 'does not contain errored entries' do
         get '/api/v1/search?query=japan'
-        last_json["entries"].each {|entry| entry["error"].should be_nil}
+        last_json["entries"].each {|entry| expect(entry["error"]).to be_nil}
       end
 
-      it 'should return different definition fields depending on the format' do
+      it 'returns different definition fields depending on the format' do
         # HTML is the default
         get '/api/v1/search?query=japan'
-        last_json["entries"].first["definition"].should include('span class=')
+        expect(last_json["entries"].first["definition"]).to include('span class=')
 
         get '/api/v1/search?query=japan&format=plain'
-        last_json["entries"].first["definition"].should_not include('span class=')
+        expect(last_json["entries"].first["definition"]).not_to include('span class=')
 
         get '/api/v1/search?query=japan&format=html'
-        last_json["entries"].first["definition"].should include('span class=')
+        expect(last_json["entries"].first["definition"]).to include('span class=')
       end
 
-      it 'should wrap the entries with a callback when given the parameter' do
+      it 'wraps the entries with a callback when given the parameter' do
         get '/api/v1/search?query=japan&callback=rspec'
-        last_response.body.to_s.should start_with('rspec(')
+        expect(last_response.body.to_s).to start_with('rspec(')
       end
 
-      it 'should return full subentries when they are requested' do
+      it 'returns full subentries when they are requested' do
         get '/api/v1/search?query=aoi'
         #last_json["entries"][1]["sub_entries"][0]["entries"][0]["midashigo"].should be_nil
         #last_json["entries"][1]["sub_entries"][0]["entries"][0]["wadoku_id"].should_not be_nil
@@ -180,8 +180,8 @@ describe WadokuSearchAPI do
           entry["sub_entries"] ||= []
           entry["sub_entries"].each do |relation|
             relation['entries'].each do |sub_entry|
-              sub_entry["midashigo"].should be_nil
-              sub_entry["wadoku_id"].should_not be_nil
+              expect(sub_entry["midashigo"]).to be_nil
+              expect(sub_entry["wadoku_id"]).not_to be_nil
             end
           end
         end
@@ -192,8 +192,8 @@ describe WadokuSearchAPI do
           entry["sub_entries"] ||= []
           entry["sub_entries"].each do |relation|
             relation['entries'].each do |sub_entry|
-              sub_entry["midashigo"].should_not be_nil
-              sub_entry["wadoku_id"].should_not be_nil
+              expect(sub_entry["midashigo"]).not_to be_nil
+              expect(sub_entry["wadoku_id"]).not_to be_nil
             end
           end
         end
@@ -217,7 +217,7 @@ describe WadokuSearchAPI do
         let(:signed_params) { sign_request params, client}
         let(:malformed_entry_params) { h = params.dup; h[:definition] = '>>><<<>>>INVALID'; sign_request h, client}
 
-        it 'should require authentications' do
+        it 'requires authentications' do
           expect(Entry.first(writing: '賢者タイム')).to be_nil
 
           post '/api/v1/entry', params
@@ -227,7 +227,7 @@ describe WadokuSearchAPI do
           expect(Entry.first(writing: '賢者タイム')).to be_nil
         end
 
-        it 'should return the created entry' do
+        it 'returns the created entry' do
           expect(Entry.first(writing: '賢者タイム')).to be_nil
 
           post '/api/v1/entry', signed_params
@@ -236,7 +236,7 @@ describe WadokuSearchAPI do
           expect(Entry.first(writing: '賢者タイム')).to be
         end
 
-        it 'should reject malformed entries' do
+        it 'rejects malformed entries' do
           expect(Entry.first(writing: '賢者タイム')).to be_nil
 
           post '/api/v1/entry', malformed_entry_params
@@ -247,31 +247,31 @@ describe WadokuSearchAPI do
         end
       end
 
-      it 'should return a representation of an entry when given a valid wadoku id' do
+      it 'returns a representation of an entry when given a valid wadoku id' do
         get '/api/v1/entry/0946913'
-        last_json["writing"].should eq "アナクロニズム"
+        expect(last_json["writing"]).to eq "アナクロニズム"
       end
 
-      it 'should return an error for an invalid wadoku id' do
+      it 'returns an error for an invalid wadoku id' do
         get '/api/v1/entry/invalid'
-        last_json["error"].should_not be_nil
+        expect(last_json["error"]).not_to be_nil
       end
 
-      it 'should return different definition fields depending on the format' do
+      it 'returns different definition fields depending on the format' do
         # HTML is the default
         get '/api/v1/entry/6843503'
-        last_json["definition"].should include('span class=')
+        expect(last_json["definition"]).to include('span class=')
 
         get '/api/v1/entry/6843503?format=plain'
-        last_json["definition"].should_not include('span class=')
+        expect(last_json["definition"]).not_to include('span class=')
 
         get '/api/v1/entry/6843503?format=html'
-        last_json["definition"].should include('span class=')
+        expect(last_json["definition"]).to include('span class=')
       end
 
-      it 'should wrap the entries with a callback when given the parameter' do
+      it 'wraps the entries with a callback when given the parameter' do
         get '/api/v1/entry/6843503?callback=rspec'
-        last_response.body.to_s.should start_with('rspec(')
+        expect(last_response.body.to_s).to start_with('rspec(')
       end
     end
   end
