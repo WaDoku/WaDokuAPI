@@ -1,6 +1,7 @@
 class HTMLTransform < Parslet::Transform
 
-  rule(:text => simple(:x)) {String.new(x)} 
+
+  rule(:text => simple(:x)) {String.new(x)}
   #rule(:genus => simple(:g), :text => simple(:t)) {"<span class='genus #{g}'>#{g}</span> #{t}"}
   rule(:genus => simple(:g)){"<span class='genus #{g}'>#{g}</span>"}
   rule(:wrong => simple(:wrong), :genus => simple(:g), :text => simple(:t)) {["<span class='genus #{g}'>#{g}</span>#{wrong + t}"]}
@@ -11,14 +12,14 @@ class HTMLTransform < Parslet::Transform
   rule(:transl => simple(:transl)) {"<span class='transl'>#{transl}</span>"}
   rule(:descr => sequence(:contents)) {"<span class='descr'>#{contents.compact.join}</span>"}
   rule(:fore => sequence(:contents)) {"<span class='fore'>#{contents.compact.join}</span>"}
-  rule(:pos => sequence(:contents)) {"(<span class='pos'>#{contents.compact.join("")}</span>)" } 
+  rule(:pos => sequence(:contents)) {"(<span class='pos'>#{contents.compact.join("")}</span>)" }
   rule(:tre => sequence(:contents)) {"<span class='tre'>#{contents.compact.join("")}</span>"}
-  rule(:mgr => sequence(:contents)) {"<span class='mgr'>#{contents.compact.join("; ")}</span>."} 
+  rule(:mgr => sequence(:contents)) {"<span class='mgr'>#{contents.compact.join("; ")}</span>."}
   rule(:transcr => sequence(:contents)) {"<span class='transcr'>#{contents.compact.join}</span>"}
   rule(:title => sequence(:contents)) {"<span class='title'>#{contents.compact.join}</span>"}
   rule(:tags_with_parens => sequence(:contents)) do
     contents.compact!
-    contents.empty? ? nil :  "(#{contents.join("; ")})" 
+    contents.empty? ? nil :  "(#{contents.join("; ")})"
   end
   rule(:title_type => simple(:title_type)) {nil}
   rule(:kimulem => simple(:kimulem)) {nil}
@@ -38,8 +39,11 @@ class HTMLTransform < Parslet::Transform
   rule(:etym=> sequence(:contents)) {"<span class='etym'>#{contents.compact.join}</span>"}
   rule(:specchar=> simple(:specchar)) {specchar.to_s}
 
-  rule(:lang => simple(:lang), :keyword => simple(:keyword)) {"Wikipedia: <a href='http://#{lang.to_s.downcase}.wikipedia.org/wiki/#{keyword}'>#{keyword}</a>" }
+  rule(:lang => simple(:lang), :keyword => simple(:keyword)) {"<a href='http://#{lang.to_s.downcase}.wikipedia.org/wiki/#{keyword}'>wikipedia.#{lang.to_s.downcase}</a>" }
   rule(:wiki => simple(:wiki)) {"<span class='wiki'>#{wiki}</span>"}
+  rule(:wadoku_type => simple(:wadoku_type)) {nil}
+  rule(:entry_id => simple(:entry_id)) {"<a href='https://www.wadoku.de/entry/view/#{entry_id}'>wadoku.de</a>"}
+  rule(:wadoku_de => sequence(:contents)) {"<span class='wadoku_de'>#{contents.compact.join}</span>"}
 
   rule(:audio => simple(:audio)) {nil}
   rule(:unknown => simple(:unknown)) {nil}
@@ -73,7 +77,7 @@ class HTMLTransform < Parslet::Transform
   rule(:pict => subtree(:x)) { nil }
 
   rule(:transcr => sequence(:t_content), :jap => simple(:jap), :daid => simple(:d)) do
-    "<span class='ref'><a href='/entries/by-daid/#{d}'><span class='jap'>#{jap}</span> - <span class='transcr'>#{t_content.compact.join}</span></a></span>"  
+    "<span class='ref'><a href='/entries/by-daid/#{d}'><span class='jap'>#{jap}</span> - <span class='transcr'>#{t_content.compact.join}</span></a></span>"
   end
 
   rule(:jap => simple(:jap)) {"<span class='jap'>#{jap}</span>"}
@@ -83,7 +87,7 @@ class HTMLTransform < Parslet::Transform
   rule(:literal => sequence(:content)){" <span class='literal'>#{content.compact.join}</span>"}
 
   rule(:relation => simple(:relation), :transcr => sequence(:t_content), :jap => simple(:jap), :daid => simple(:d)) do
-    "<span class='ref'><span class='relation'>#{relation}</span><a href='/entries/by-daid/#{d}'><span class='jap'>#{jap}</span> - <span class='transcr'>#{t_content.compact.join}</span></a></span>"  
+    "<span class='ref'><span class='relation'>#{relation}</span><a href='/entries/by-daid/#{d}'><span class='jap'>#{jap}</span> - <span class='transcr'>#{t_content.compact.join}</span></a></span>"
   end
 
 
@@ -99,4 +103,3 @@ class HTMLTransform < Parslet::Transform
   # drop it.
   rule(:seperator => simple(:seperator)){nil}
 end
-
