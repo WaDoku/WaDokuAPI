@@ -46,8 +46,8 @@ class HTMLTransform < Parslet::Transform
 
   rule(audio: simple(:audio)) { nil }
   rule(unknown: simple(:unknown)) { nil }
-  rule(s_number: simple(:s_number)) { "<a href='http://books.google.com/books?id=bkNWKdYgxVoC&pg=PA#{s_number}'>S.#{s_number}</a>" }
-  rule(steinhaus: sequence(:contents)) { "<span class='steinhaus'>Steinhaus: #{contents.compact.join(',')}</span>" }
+  rule(s_number: simple(:s_number)) { "<a href='http://books.google.com/books?id=bkNWKdYgxVoC&pg=PA#{s_number}'>Steinhaus: S.#{s_number}</a>" }
+  rule(steinhaus: sequence(:contents)) { "<span class='link_to_source'>#{contents.compact.join(',')}</span>" }
   rule(number: simple(:n), mgr: sequence(:contents)) do
     "<span class='mgr_number'>#{n}</span> <span class='mgr'>#{contents.compact.join('; ')}</span>."
   end
