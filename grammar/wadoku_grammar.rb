@@ -169,7 +169,8 @@ class WadokuGrammar < Parslet::Parser
                           url |
                           jwd |
                           wiki |
-                          wadoku_de
+                          wadoku_de |
+                          jaanus
                         }
 
   rule(:tags_with_parens?) { tags_with_parens.maybe}
@@ -178,6 +179,7 @@ class WadokuGrammar < Parslet::Parser
 
   rule(:wiki) {(str("<Wiki") >> match(".").repeat(2,2).as(:lang) >> space? >> str(":") >> space? >> non_closing.as(:keyword) >> space? >> str(">")).as(:wiki)}
   rule(:wadoku_de) { (str("<WaDokuDE") >> space? >> non_closing.maybe.as(:wadoku_type) >> space? >> str(":") >> space? >> non_closing.as(:entry_id).repeat(1) >> space? >> str(">")).as(:wadoku_de) }
+  rule(:jaanus) { str("<JAANUS:") >> space? >> non_closing.as(:jaanus) >> space? >> str(">")}
 
 
 # <iron.>
