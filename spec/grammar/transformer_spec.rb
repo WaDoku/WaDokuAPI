@@ -29,6 +29,13 @@ describe HTMLTransform do
     expect(res.class).to eq(String)
   end
 
+  it 'converts jaanus tags successfully' do
+    text = '(<POS: N.>) <MGr: {<Dom.: Archit.>} <TrE: <HW f: Amado>>; <TrE: <HW f: Holzschiebetür>>; <TrE: <JLPT2> <HW m: Fensterladen>>; <TrE: <HW f: Regentür>> (<WikiJA: 雨戸>；<JAANUS: amado>)>.'
+    tree = grammar.parse(text)
+    res = transformer.apply(tree)
+    expect(res.class).to eq(String)
+  end
+
   it 'transforms complete entries' do
 
     text = '(<POS: N.>) <MGr: {<Dom.: Bot.>} <TrE: <HW f: Artischocke>> (<Scientif.: Cynara scolymus>)>.'

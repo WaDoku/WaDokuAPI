@@ -44,6 +44,7 @@ class HTMLTransform < Parslet::Transform
   rule(:wadoku_type => simple(:wadoku_type)) {nil}
   rule(:entry_id => simple(:entry_id)) {"<a href='https://www.wadoku.de/entry/view/#{entry_id}'>wadoku.de</a>"}
   rule(:wadoku_de => sequence(:contents)) {"<span class='wadoku_de'>#{contents.compact.join}</span>"}
+  rule(:jaanus => simple(:jaanus)) {"<span class='jaanus'><a href='http://www.aisf.or.jp/~jaanus/deta/#{jaanus.to_s.downcase[0]}/#{jaanus.to_s.downcase}.htm'>Dict. of Japan. Architect. and Art Hist. Terminology</a></span>"}
 
   rule(:audio => simple(:audio)) {nil}
   rule(:unknown => simple(:unknown)) {nil}
