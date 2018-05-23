@@ -38,11 +38,11 @@ class HTMLTransform < Parslet::Transform
   rule(specchar: simple(:specchar)) { specchar.to_s }
 
   rule(lang: simple(:lang), keyword: simple(:keyword)) { "<a href='http://#{lang.to_s.downcase}.wikipedia.org/wiki/#{keyword}'>wikipedia.#{lang.to_s.downcase}</a>" }
-  rule(wiki: simple(:wiki)) { "<span class='wiki'>#{wiki}</span>" }
+  rule(wiki: simple(:wiki)) { "<span class='link_to_source'>#{wiki}</span>" }
   rule(wadoku_type: simple(:wadoku_type)) { nil }
   rule(entry_id: simple(:entry_id)) { "<a href='https://www.wadoku.de/entry/view/#{entry_id}'>wadoku.de</a>" }
-  rule(wadoku_de: sequence(:contents)) { "<span class='wadoku_de'>#{contents.compact.join}</span>" }
-  rule(jaanus: simple(:jaanus)) { "<span class='jaanus'><a href='http://www.aisf.or.jp/~jaanus/deta/#{jaanus.to_s.downcase[0]}/#{jaanus.to_s.downcase}.htm'>Dict. of Japan. Architect. and Art Hist. Terminology</a></span>" }
+  rule(wadoku_de: sequence(:contents)) { "<span class='link_to_source'>#{contents.compact.join}</span>" }
+  rule(jaanus: simple(:jaanus)) { "<span class='link_to_source'><a href='http://www.aisf.or.jp/~jaanus/deta/#{jaanus.to_s.downcase[0]}/#{jaanus.to_s.downcase}.htm'>JAANUS</a></span>" }
 
   rule(audio: simple(:audio)) { nil }
   rule(unknown: simple(:unknown)) { nil }
