@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'pry-byebug'
 
 describe HTMLTransform do
   let(:grammar) { WadokuGrammar.new }
@@ -23,13 +22,13 @@ describe HTMLTransform do
     expect(res).not_to include('dij')
   end
 
-  xit 'converts wadoku_de tags successfully' do
+  it 'converts wadoku_de tags successfully' do
     text = '(<POS: N.>) <MGr: {<Dom.: Gesch.t Christent.>} <TrE: <HW n: Autodafé>>; <TrE: <HW n: Glaubensgericht>> (<Def.: Verkündigung und Vollstreckung eines Inquisitionsurteils>；<Etym.: von port. <For.: auto da fé>>；<WaDokuDE UNGEP: 10014255>)>.'
     tree = grammar.parse(text)
     res = transformer.apply(tree)
     expect(res.class).to eq(String)
   end
-  
+
   it 'transforms complete entries' do
 
     text = '(<POS: N.>) <MGr: {<Dom.: Bot.>} <TrE: <HW f: Artischocke>> (<Scientif.: Cynara scolymus>)>.'
