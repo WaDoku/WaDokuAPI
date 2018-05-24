@@ -79,6 +79,7 @@ end
 desc "Fill database, fill index, than run specs"
 task :fresh_spec do
   task(:fill_db).invoke
+  task(:create_lemmata).invoke
   task(:picky_index).invoke
   task(:spec).invoke
 end
@@ -114,7 +115,6 @@ task :create_lemmata do
       end
     end
   end
-
 end
 
 desc "Fill DB from tab file"
@@ -196,8 +196,6 @@ task :fill_db do
       end
     end
   end
-
-  task(:create_lemmata).invoke
 end
 
 desc "Fill Picky indexes from database"
