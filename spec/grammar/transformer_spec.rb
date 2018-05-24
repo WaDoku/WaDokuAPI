@@ -6,7 +6,7 @@ describe HTMLTransform do
   it 'transforms steinhaus links' do
     steinhaus = grammar.steinhaus.parse('<Steinhaus: 28>')
     res = transformer.apply(steinhaus)
-    expect(res).to eq("<span class='steinhaus'>Steinhaus: <a href='http://books.google.com/books?id=bkNWKdYgxVoC&pg=PA28'>S.28</a></span>")
+    expect(res).to eq("<span class='link_to_source'><a href='http://books.google.com/books?id=bkNWKdYgxVoC&pg=PA28'>Steinhaus: S.28</a></span>")
   end
   it 'transforms text elements' do
     tree = { text: 'Ein einfacher Text' }
